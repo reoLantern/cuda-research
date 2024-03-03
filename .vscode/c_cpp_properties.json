@@ -7,7 +7,7 @@
             ],
             "compilerPath": "/usr/local/cuda/bin/nvcc",
             "compilerArgs": [
-                "--gpu-architecture=compute_70"
+                "--gpu-architecture=compute_90"
             ],
             "intelliSenseMode": "linux-gcc-x64"
         }
