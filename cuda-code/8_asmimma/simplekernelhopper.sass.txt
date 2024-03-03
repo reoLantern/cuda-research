@@ -1,0 +1,143 @@
+
+Fatbin elf code:
+================
+arch = sm_90
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+	code for sm_90
+
+Fatbin elf code:
+================
+arch = sm_90
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+	code for sm_90
+		Function : _Z8wmma_kerPjS_Pi
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM90 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM90)"
+        /*0000*/                   LDC R1, c[0x0][0x28] ;                           
+                                                                                    
+        /*0010*/                   S2R R5, SR_LANEID ;                              // R5存储laneid
+                                                                                    
+        /*0020*/                   IMAD.MOV.U32 R3, RZ, RZ, RZ ;                    
+                                                                                    
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x210] ;                     
+                                                                                    
+        /*0040*/                   ULDC.64 UR6, c[0x0][0x218] ;                     
+                                                                                    
+        /*0050*/                   LOP3.LUT R2, R5, 0x3, RZ, 0xc0, !PT ;            
+                                                                                    
+        /*0060*/                   SHF.R.U32.HI R5, RZ, 0x2, R5 ;                   
+                                                                                    
+        /*0070*/                   IMAD.WIDE.U32 R2, R5, 0x4, R2 ;                  
+                                                                                    
+        /*0080*/                   LEA R4, P0, R2.reuse, UR4, 0x2 ;                 // A的addr，R4=(R2<<2)+UR4，R2和landID有关
+                                                                                    
+        /*0090*/                   LEA R6, P1, R2.reuse, UR6, 0x2 ;                 
+                                                                                    
+        /*00a0*/                   LEA.HI.X R5, R2.reuse, UR5, R3.reuse, 0x2, P0 ;  // A的addr的高位
+                                                                                    
+        /*00b0*/                   ULDC.64 UR4, c[0x0][0x208] ;                     
+                                                                                    
+        /*00c0*/                   LEA.HI.X R7, R2, UR7, R3, 0x2, P1 ;              // B的addr的高位
+                                                                                    
+        /*00d0*/                   LDG.E R4, desc[UR4][R4.64] ;                     // Load from Global Memory，加载A到R4
+                                                                                    
+        /*00e0*/                   LDG.E R6, desc[UR4][R6.64] ;                     // Load from Global Memory，加载B到R6
+                                                                                    
+        /*00f0*/                   MOV R8, 0x110 ;                                  // R8 = 0X110
+                                                                                    
+        /*0100*/                   CALL.REL.NOINC 0x1b0 ;                           // 跳转到0x1b0，进行mma运算
+                                                                                    
+        /*0110*/                   S2R R0, SR_LANEID ;                              // R0存储laneID
+                                                                                    
+        /*0120*/                   IMAD.MOV.U32 R3, RZ, RZ, RZ ;                    
+                                                                                    
+        /*0130*/                   ULDC.64 UR6, c[0x0][0x220] ;                     
+                                                                                    
+        /*0140*/                   LOP3.LUT R2, R0, 0x3, RZ, 0xc0, !PT ;            
+                                                                                    
+        /*0150*/                   SHF.R.U32.HI R5, RZ, 0x2, R0 ;                   
+                                                                                    
+        /*0160*/                   IMAD.WIDE.U32 R4, R5, 0x4, R2 ;                  
+                                                                                    
+        /*0170*/                   LEA R2, P0, R4, UR6, 0x3 ;                       
+                                                                                    
+        /*0180*/                   LEA.HI.X R3, R4, UR7, R5, 0x3, P0 ;              
+                                                                                    
+        /*0190*/                   STG.E.64 desc[UR4][R2.64], R6 ;                  // 存回计算结果在这里！R6、R7是最终结果
+                                                                                    
+        /*01a0*/                   EXIT ;                                           
+                                                                                    
+        /*01b0*/                   LOP3.LUT R0, R4, 0xf0f0f0f0, RZ, 0xc0, !PT ;     // R0 = R4 & 0xf0f0f0f0
+            lop3指令可以参考https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#logic-and-shift-instructions-lop3
+        /*01c0*/                   LOP3.LUT R2, R6, 0xf0f0f0f0, RZ, 0xc0, !PT ;     // R2 = R6 & 0xf0f0f0f0
+            这里，LOP3.LUT d, a, b, c, 0xc0，结果是：d=a&b
+        /*01d0*/                   LOP3.LUT R4, R4, 0xf0f0f0f, RZ, 0xc0, !PT ;      // R4 = R4 & 0x0f0f0f0f，准备A.1
+                                                                                    
+        /*01e0*/                   LOP3.LUT R3, R6, 0xf0f0f0f, RZ, 0xc0, !PT ;      // R3 = R6 & 0x0f0f0f0f，准备B.1
+                                                                                    
+        /*01f0*/                   SHF.R.U32.HI R0, RZ, 0x4, R0 ;                   // A.2
+                                                                                    
+        /*0200*/                   SHF.R.U32.HI R5, RZ, 0x4, R2 ;                   // B.2
+                                                                                    
+        /*0210*/                   IMMA.8816.U8.U8 R2, R4.ROW, R3.COL, RZ ;         // A.1在R4，B.1在R3，计算结果写入R2、R3
+                                                                                    
+        /*0220*/                   IMMA.8816.U8.U8 R4, R0.ROW, R5.COL, RZ ;         // A.2在R0，B.2在R5，计算结果写入R4、R5
+                                                                                    
+        /*0230*/                   IADD3 R6, R2, 0x1, R4 ;                          // +0x1，对应+C，R6是最终结果之一
+                                                                                    
+        /*0240*/                   IMAD.MOV.U32 R2, RZ, RZ, R8 ;                    // R2 = R8 = 0X110
+                                                                                    
+        /*0250*/                   IADD3 R7, R3, 0x1, R5 ;                          // +0x1，对应+C，R7是最终结果之一
+                                                                                    
+        /*0260*/                   IMAD.MOV.U32 R3, RZ, RZ, 0x0 ;                   
+                                                                                    
+        /*0270*/                   RET.REL.NODEC R2 0x0 ;                           // 跳转到0x110，从而跳转到STG指令
+                                                                                    
+        /*0280*/                   BRA 0x280;                                       
+                                                                                    
+        /*0290*/                   NOP;                                             
+                                                                                    
+        /*02a0*/                   NOP;                                             
+                                                                                    
+        /*02b0*/                   NOP;                                             
+                                                                                    
+        /*02c0*/                   NOP;                                             
+                                                                                    
+        /*02d0*/                   NOP;                                             
+                                                                                    
+        /*02e0*/                   NOP;                                             
+                                                                                    
+        /*02f0*/                   NOP;                                             
+                                                                                    
+        /*0300*/                   NOP;                                             
+                                                                                    
+        /*0310*/                   NOP;                                             
+                                                                                    
+        /*0320*/                   NOP;                                             
+                                                                                    
+        /*0330*/                   NOP;                                             
+                                                                                    
+        /*0340*/                   NOP;                                             
+                                                                                    
+        /*0350*/                   NOP;                                             
+                                                                                    
+        /*0360*/                   NOP;                                             
+                                                                                    
+        /*0370*/                   NOP;                                             
+                                                                                    
+		..........
+
+
+
+Fatbin ptx code:
+================
+arch = sm_90
+code version = [8,0]
+host = linux
+compile_size = 64bit
+compressed

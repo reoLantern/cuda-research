@@ -1,0 +1,178 @@
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [7,0]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+compressed
+
+
+
+
+
+
+
+
+.version 7.0
+.target sm_75
+.address_size 64
+
+
+.extern .func (.param .b32 func_retval0) vprintf
+(
+.param .b64 vprintf_param_0,
+.param .b64 vprintf_param_1
+)
+;
+
+
+
+.global .align 1 .b8 $str[70] = {84, 104, 114, 101, 97, 100, 37, 117, 32, 105, 109, 109, 97, 32, 115, 116, 97, 114, 116, 115, 32, 97, 116, 32, 99, 121, 99, 108, 101, 32, 37, 117, 44, 32, 101, 110, 100, 115, 32, 97, 116, 32, 99, 121, 99, 108, 101, 32, 37, 117, 44, 32, 116, 97, 107, 101, 115, 32, 37, 117, 32, 99, 121, 99, 108, 101, 115, 46, 10, 0};
+
+.visible .entry _Z19imma8832NaiveKernelPKjS0_Pj(
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_0,
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_1,
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_2
+)
+{
+.local .align 16 .b8 __local_depot0[16];
+.reg .b64 %SP;
+.reg .b64 %SPL;
+.reg .pred %p<3>;
+.reg .b32 %r<66>;
+.reg .b64 %rd<16>;
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A[128];
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B[128];
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_C[256];
+
+mov.u64 %SPL, __local_depot0;
+cvta.local.u64 %SP, %SPL;
+ld.param.u64 %rd1, [_Z19imma8832NaiveKernelPKjS0_Pj_param_0];
+ld.param.u64 %rd2, [_Z19imma8832NaiveKernelPKjS0_Pj_param_1];
+ld.param.u64 %rd3, [_Z19imma8832NaiveKernelPKjS0_Pj_param_2];
+mov.u32 %r1, %tid.x;
+and.b32 %r2, %r1, 31;
+setp.gt.u32	%p1, %r2, 7;
+@%p1 bra BB0_2;
+
+cvta.to.global.u64 %rd4, %rd1;
+shl.b32 %r3, %r2, 2;
+mul.wide.u32 %rd5, %r3, 4;
+add.s64 %rd6, %rd4, %rd5;
+shl.b32 %r4, %r2, 4;
+mov.u32 %r5, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A;
+add.s32 %r6, %r5, %r4;
+ld.global.nc.v4.u32 {%r7, %r8, %r9, %r10}, [%rd6];
+st.shared.v4.u32 [%r6], {%r7, %r8, %r9, %r10};
+cvta.to.global.u64 %rd7, %rd2;
+add.s64 %rd8, %rd7, %rd5;
+mov.u32 %r15, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B;
+add.s32 %r16, %r15, %r4;
+ld.global.nc.v4.u32 {%r17, %r18, %r19, %r20}, [%rd8];
+st.shared.v4.u32 [%r16], {%r17, %r18, %r19, %r20};
+
+BB0_2:
+and.b32 %r37, %r1, 7;
+shl.b32 %r38, %r37, 4;
+mov.u32 %r39, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A;
+add.s32 %r26, %r39, %r38;
+
+	ldmatrix.sync.aligned.m8n8.x1.shared.b16 {%r25}, [%r26];
+
+
+	mov.u32 %r40, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B;
+add.s32 %r28, %r40, %r38;
+
+	ldmatrix.sync.aligned.m8n8.x1.shared.b16 {%r27}, [%r28];
+
+
+	
+	mov.u32 %r29, %clock;
+
+	mov.u32 %r35, 0;
+
+	mma.sync.aligned.m8n8k32.row.col.s32.s4.s4.s32 {%r30, %r31}, {%r25}, {%r27}, {%r35, %r35};
+
+
+	
+	mov.u32 %r36, %clock;
+
+	sub.s32 %r41, %r36, %r29;
+add.u64 %rd9, %SP, 0;
+add.u64 %rd10, %SPL, 0;
+st.local.u32 [%rd10], %r2;
+st.local.u32 [%rd10+4], %r29;
+st.local.u32 [%rd10+8], %r36;
+st.local.u32 [%rd10+12], %r41;
+mov.u64 %rd11, $str;
+cvta.global.u64 %rd12, %rd11;
+
+	{
+.reg .b32 temp_param_reg;
+
+	.param .b64 param0;
+st.param.b64	[param0+0], %rd12;
+.param .b64 param1;
+st.param.b64	[param1+0], %rd9;
+.param .b32 retval0;
+call.uni (retval0), 
+vprintf, 
+(
+param0, 
+param1
+);
+ld.param.b32	%r42, [retval0+0];
+
+
+	}
+	shl.b32 %r43, %r2, 3;
+and.b32 %r44, %r43, -32;
+mov.u32 %r45, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_C;
+add.s32 %r46, %r45, %r44;
+shl.b32 %r47, %r1, 3;
+and.b32 %r48, %r47, 24;
+add.s32 %r49, %r46, %r48;
+st.shared.u32 [%r49], %r30;
+st.shared.u32 [%r49+4], %r31;
+setp.gt.u32	%p2, %r2, 15;
+@%p2 bra BB0_4;
+
+shl.b32 %r50, %r2, 2;
+cvta.to.global.u64 %rd13, %rd3;
+mul.wide.u32 %rd14, %r50, 4;
+add.s64 %rd15, %rd13, %rd14;
+shl.b32 %r51, %r2, 4;
+and.b32 %r52, %r51, -32;
+add.s32 %r54, %r45, %r52;
+shl.b32 %r55, %r1, 4;
+and.b32 %r56, %r55, 16;
+add.s32 %r57, %r54, %r56;
+ld.shared.v4.u32 {%r58, %r59, %r60, %r61}, [%r57];
+st.global.v4.u32 [%rd15], {%r58, %r59, %r60, %r61};
+
+BB0_4:
+ret;
+}
+
+

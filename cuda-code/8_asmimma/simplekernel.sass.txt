@@ -1,0 +1,98 @@
+
+Fatbin elf code:
+================
+arch = sm_86
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+
+	code for sm_86
+
+Fatbin elf code:
+================
+arch = sm_86
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+
+	code for sm_86
+		Function : _Z8wmma_kerPjS_Pi
+	.headerflags    @"EF_CUDA_SM86 EF_CUDA_PTX_SM(EF_CUDA_SM86)"
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;                    // 整数乘加，                        
+                                                                                                                              
+        /*0010*/                   S2R R5, SR_LANEID ;                                        // R5存储laneid？               
+                                                                                                                              
+        /*0020*/                   IMAD.MOV.U32 R3, RZ, RZ, RZ ;                              // 前三条指令和A、B无关         
+                                                                                                                              
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;                               // 通用指令                     
+                                                                                                                              
+        /*0040*/                   LOP3.LUT R2, R5, 0x3, RZ, 0xc0, !PT ;                      // 通用指令                     
+                                                                                                                              
+        /*0050*/                   SHF.R.U32.HI R5, RZ, 0x2, R5 ;                             // 通用指令                     
+                                                                                                                              
+        /*0060*/                   IMAD.WIDE.U32 R2, R5, 0x4, R2 ;                            // 通用指令                     
+                                                                                                                              
+        /*0070*/                   LEA R6, P1, R2.reuse, c[0x0][0x168], 0x2 ;                 // B的addr：R6=(R2<<2)+c[0x0][0x168]，R2和laneID有关             
+                                                                                                                                 
+        /*0080*/                   LEA R4, P0, R2.reuse, c[0x0][0x160], 0x2 ;                 // A的addr：R4=(R2<<2)+c[0x0][0x160]，R2和laneID有关             
+                                                                                                               
+        /*0090*/                   LEA.HI.X R7, R2.reuse, c[0x0][0x16c], R3.reuse, 0x2, P1 ;  // B的addr：高位R7                                        
+                                                                                                                         
+        /*00a0*/                   LEA.HI.X R5, R2, c[0x0][0x164], R3, 0x2, P0 ;              // A的addr：高位R5                                   
+                                                                                                                                
+        /*00b0*/                   LDG.E R7, [R6.64] ;                                        // Load from Global Memory，加载B到R7                          
+                                                                                                                                    
+        /*00c0*/                   LDG.E R4, [R4.64] ;                                        // Load from Global Memory，加载A到R4 
+                                                                                                                                    
+        /*00d0*/                   IMAD.MOV.U32 R10, RZ, RZ, 0x1 ;                            // 加载C                              
+                                                                                                                                    
+        /*00e0*/                   IMAD.MOV.U32 R11, RZ, RZ, 0x1 ;                            // 加载C                              
+                                                                                                                                    
+        /*00f0*/                   LEA R8, P0, R2, c[0x0][0x170], 0x3 ;                       // D矩阵的存回地址
+                                                                                                                                    
+        /*0100*/                   LEA.HI.X R9, R2, c[0x0][0x174], R3, 0x3, P0 ;              // D矩阵的存回地址
+                                                                                                                                    
+        /*0110*/                   IMMA.8832.U4.U4 R10, R4.ROW, R7.COL, R10 ;                 // Tensor Core计算                                      
+                                                                                                                                    
+        /*0120*/                   STG.E.64 [R8.64], R10 ;                                    // 将R10的D数据存回                        
+                                                                                             
+        /*0130*/                   EXIT ;                                                     /* 0x000000000000794d */
+                                                                                              /* 0x000fea0003800000 */
+        /*0140*/                   BRA 0x140;                                                 /* 0xfffffff000007947 */
+                                                                                              /* 0x000fc0000383ffff */
+        /*0150*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*0160*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*0170*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*0180*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*0190*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*01a0*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*01b0*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*01c0*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*01d0*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*01e0*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+        /*01f0*/                   NOP;                                                       /* 0x0000000000007918 */
+                                                                                              /* 0x000fc00000000000 */
+		..........
+
+
+
+Fatbin ptx code:
+================
+arch = sm_86
+code version = [7,3]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+compressed

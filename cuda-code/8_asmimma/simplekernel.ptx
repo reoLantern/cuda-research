@@ -1,0 +1,63 @@
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [8,0]
+host = linux
+compile_size = 64bit
+compressed
+
+
+
+
+
+
+
+
+.version 8.0
+.target sm_75
+.address_size 64
+
+
+
+.visible .entry _Z8wmma_kerPjS_Pi(
+.param .u64 _Z8wmma_kerPjS_Pi_param_0,
+.param .u64 _Z8wmma_kerPjS_Pi_param_1,
+.param .u64 _Z8wmma_kerPjS_Pi_param_2
+)
+{
+.reg .b32 %r<8>;
+.reg .b64 %rd<7>;
+
+
+ld.param.u64 %rd1, [_Z8wmma_kerPjS_Pi_param_0];
+ld.param.u64 %rd2, [_Z8wmma_kerPjS_Pi_param_1];
+ld.param.u64 %rd3, [_Z8wmma_kerPjS_Pi_param_2];
+cvta.to.global.u64 %rd4, %rd1;
+cvta.to.global.u64 %rd5, %rd2;
+cvta.to.global.u64 %rd6, %rd3;
+mov.u32 %r1, 32;
+wmma.load.a.sync.aligned.row.m8n8k32.global.u4 {%r2}, [%rd4], %r1;
+wmma.load.b.sync.aligned.col.m8n8k32.global.u4 {%r3}, [%rd5], %r1;
+mov.u32 %r4, 2;
+wmma.mma.sync.aligned.row.col.m8n8k32.s32.u4.u4.s32 {%r5, %r6}, {%r2}, {%r3}, {%r4, %r4};
+mov.u32 %r7, 8;
+wmma.store.d.sync.aligned.row.m8n8k32.global.s32 [%rd6], {%r5, %r6}, %r7;
+ret;
+
+}
+

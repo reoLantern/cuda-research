@@ -1,0 +1,26 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "simpleimma",
+            "type": "cuda-gdb",
+            "request": "launch",
+            "program": "${workspaceFolder}/cuda-code/6_simpleimma/simpleimma",
+            // "preLaunchTask": "simpleimma"
+        },
+        {
+            "name": "asmimma",
+            "type": "cuda-gdb",
+            "request": "launch",
+            "program": "${workspaceFolder}/cuda-code/8_asmimma/asmimma",
+        },
+        {
+            "name": "CUDA C++: Attach",
+            "type": "cuda-gdb",
+            "request": "attach"
+        }
+    ]
+}

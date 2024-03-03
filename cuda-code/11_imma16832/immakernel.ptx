@@ -1,0 +1,250 @@
+
+Fatbin elf code:
+================
+arch = sm_80
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_80
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_80
+code version = [8,0]
+host = linux
+compile_size = 64bit
+compressed
+
+
+
+
+
+
+
+
+.version 8.0
+.target sm_80
+.address_size 64
+
+
+.extern .func (.param .b32 func_retval0) vprintf
+(
+.param .b64 vprintf_param_0,
+.param .b64 vprintf_param_1
+)
+;
+
+
+
+.global .align 1 .b8 $str[70] = {84, 104, 114, 101, 97, 100, 37, 117, 32, 105, 109, 109, 97, 32, 115, 116, 97, 114, 116, 115, 32, 97, 116, 32, 99, 121, 99, 108, 101, 32, 37, 117, 44, 32, 101, 110, 100, 115, 32, 97, 116, 32, 99, 121, 99, 108, 101, 32, 37, 117, 44, 32, 116, 97, 107, 101, 115, 32, 37, 117, 32, 99, 121, 99, 108, 101, 115, 46, 10, 0};
+
+.visible .entry _Z19imma8832NaiveKernelPKjS0_Pj(
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_0,
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_1,
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_2
+)
+{
+.local .align 16 .b8 __local_depot0[16];
+.reg .b64 %SP;
+.reg .b64 %SPL;
+.reg .pred %p<4>;
+.reg .b32 %r<175>;
+.reg .b64 %rd<17>;
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A[256];
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B[128];
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_C[5120];
+
+mov.u64 %SPL, __local_depot0;
+cvta.local.u64 %SP, %SPL;
+ld.param.u64 %rd1, [_Z19imma8832NaiveKernelPKjS0_Pj_param_0];
+ld.param.u64 %rd2, [_Z19imma8832NaiveKernelPKjS0_Pj_param_1];
+ld.param.u64 %rd3, [_Z19imma8832NaiveKernelPKjS0_Pj_param_2];
+mov.u32 %r1, %tid.x;
+and.b32 %r2, %r1, 31;
+setp.gt.u32 %p1, %r2, 15;
+@%p1 bra $L__BB0_2;
+
+cvta.to.global.u64 %rd4, %rd1;
+shl.b32 %r3, %r2, 2;
+mul.wide.u32 %rd5, %r3, 4;
+add.s64 %rd6, %rd4, %rd5;
+shl.b32 %r4, %r2, 4;
+mov.u32 %r5, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A;
+add.s32 %r6, %r5, %r4;
+ld.global.nc.v4.u32 {%r7, %r8, %r9, %r10}, [%rd6];
+st.shared.v4.u32 [%r6], {%r7, %r8, %r9, %r10};
+
+$L__BB0_2:
+setp.lt.u32 %p2, %r2, 8;
+@%p2 bra $L__BB0_3;
+bra.uni $L__BB0_4;
+
+$L__BB0_3:
+shl.b32 %r15, %r2, 4;
+mov.u32 %r16, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B;
+add.s32 %r17, %r16, %r15;
+shl.b32 %r18, %r2, 2;
+cvta.to.global.u64 %rd7, %rd2;
+mul.wide.u32 %rd8, %r18, 4;
+add.s64 %rd9, %rd7, %rd8;
+ld.global.nc.v4.u32 {%r19, %r20, %r21, %r22}, [%rd9];
+st.shared.v4.u32 [%r17], {%r19, %r20, %r21, %r22};
+
+$L__BB0_4:
+shl.b32 %r144, %r2, 2;
+and.b32 %r145, %r1, 7;
+or.b32 %r146, %r145, 8;
+selp.b32 %r147, %r145, %r146, %p2;
+shl.b32 %r148, %r147, 4;
+mov.u32 %r149, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A;
+add.s32 %r29, %r149, %r148;
+
+	ldmatrix.sync.aligned.m8n8.x2.shared.b16 {%r27, %r28}, [%r29];
+
+
+	shl.b32 %r150, %r1, 4;
+and.b32 %r151, %r150, 112;
+mov.u32 %r152, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B;
+add.s32 %r31, %r152, %r151;
+
+	ldmatrix.sync.aligned.m8n8.x1.shared.b16 {%r30}, [%r31];
+
+
+	mov.u32 %r142, 0;
+
+	mov.u32 %r32, %clock;
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r33, %r34, %r35, %r36}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r44, %r45, %r46, %r47}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r55, %r56, %r57, %r58}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r66, %r67, %r68, %r69}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r77, %r78, %r79, %r80}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r88, %r89, %r90, %r91}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r99, %r100, %r101, %r102}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r110, %r111, %r112, %r113}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r121, %r122, %r123, %r124}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mma.sync.aligned.m16n8k32.row.col.s32.s4.s4.s32 {%r132, %r133, %r134, %r135}, {%r27, %r28}, {%r30}, {%r142, %r142, %r142, %r142};
+
+
+	
+	mov.u32 %r143, %clock;
+
+	sub.s32 %r153, %r143, %r32;
+add.u64 %rd10, %SP, 0;
+add.u64 %rd11, %SPL, 0;
+st.local.v4.u32 [%rd11], {%r2, %r32, %r143, %r153};
+mov.u64 %rd12, $str;
+cvta.global.u64 %rd13, %rd12;
+{ 
+	.reg .b32 temp_param_reg;
+.param .b64 param0;
+st.param.b64 [param0+0], %rd13;
+.param .b64 param1;
+st.param.b64 [param1+0], %rd10;
+.param .b32 retval0;
+call.uni (retval0), 
+vprintf, 
+(
+param0, 
+param1
+);
+ld.param.b32 %r154, [retval0+0];
+} 
+	shl.b32 %r155, %r2, 3;
+and.b32 %r156, %r155, 224;
+mov.u32 %r157, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_C;
+add.s32 %r158, %r157, %r156;
+shl.b32 %r159, %r1, 3;
+and.b32 %r160, %r159, 24;
+add.s32 %r161, %r158, %r160;
+st.shared.u32 [%r161], %r33;
+st.shared.u32 [%r161+4], %r34;
+st.shared.u32 [%r161+256], %r35;
+st.shared.u32 [%r161+260], %r36;
+st.shared.u32 [%r161+512], %r44;
+st.shared.u32 [%r161+516], %r45;
+st.shared.u32 [%r161+768], %r46;
+st.shared.u32 [%r161+772], %r47;
+st.shared.u32 [%r161+1024], %r55;
+st.shared.u32 [%r161+1028], %r56;
+st.shared.u32 [%r161+1280], %r57;
+st.shared.u32 [%r161+1284], %r58;
+st.shared.u32 [%r161+1536], %r66;
+st.shared.u32 [%r161+1540], %r67;
+st.shared.u32 [%r161+1792], %r68;
+st.shared.u32 [%r161+1796], %r69;
+st.shared.u32 [%r161+2048], %r77;
+st.shared.u32 [%r161+2052], %r78;
+st.shared.u32 [%r161+2304], %r79;
+st.shared.u32 [%r161+2308], %r80;
+st.shared.u32 [%r161+2560], %r88;
+st.shared.u32 [%r161+2564], %r89;
+st.shared.u32 [%r161+2816], %r90;
+st.shared.u32 [%r161+2820], %r91;
+st.shared.u32 [%r161+3072], %r99;
+st.shared.u32 [%r161+3076], %r100;
+st.shared.u32 [%r161+3328], %r101;
+st.shared.u32 [%r161+3332], %r102;
+st.shared.u32 [%r161+3584], %r110;
+st.shared.u32 [%r161+3588], %r111;
+st.shared.u32 [%r161+3840], %r112;
+st.shared.u32 [%r161+3844], %r113;
+st.shared.u32 [%r161+4096], %r121;
+st.shared.u32 [%r161+4100], %r122;
+st.shared.u32 [%r161+4352], %r123;
+st.shared.u32 [%r161+4356], %r124;
+st.shared.u32 [%r161+4608], %r132;
+st.shared.u32 [%r161+4612], %r133;
+st.shared.u32 [%r161+4864], %r134;
+st.shared.u32 [%r161+4868], %r135;
+cvta.to.global.u64 %rd14, %rd3;
+mul.wide.u32 %rd15, %r144, 4;
+add.s64 %rd16, %rd14, %rd15;
+shl.b32 %r162, %r2, 4;
+and.b32 %r163, %r162, 480;
+add.s32 %r164, %r157, %r163;
+and.b32 %r165, %r150, 16;
+add.s32 %r166, %r164, %r165;
+ld.shared.v4.u32 {%r167, %r168, %r169, %r170}, [%r166];
+st.global.v4.u32 [%rd16], {%r167, %r168, %r169, %r170};
+ret;
+
+}
+

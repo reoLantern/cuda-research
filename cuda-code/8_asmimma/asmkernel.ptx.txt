@@ -1,0 +1,131 @@
+
+Fatbin elf code:
+================
+arch = sm_86
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_86
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_86
+code version = [7,3]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+compressed
+
+
+
+
+
+
+
+
+.version 7.3
+.target sm_86
+.address_size 64
+
+
+
+
+
+
+.visible .entry _Z19imma8832NaiveKernelPKjS0_Pj(
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_0,
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_1,
+.param .u64 _Z19imma8832NaiveKernelPKjS0_Pj_param_2
+)
+{
+.reg .pred %p<3>;
+.reg .b32 %r<62>;
+.reg .b64 %rd<12>;
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A[128];
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B[128];
+
+	.shared .align 4 .b8 _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_C[256];
+
+ld.param.u64 %rd1, [_Z19imma8832NaiveKernelPKjS0_Pj_param_0];	// A、B、C的地址
+ld.param.u64 %rd2, [_Z19imma8832NaiveKernelPKjS0_Pj_param_1];	// A、B、C的地址
+ld.param.u64 %rd3, [_Z19imma8832NaiveKernelPKjS0_Pj_param_2];	// A、B、C的地址
+mov.u32 %r1, %tid.x;											// laneId
+and.b32 %r2, %r1, 31;											// laneId存放在r2
+setp.gt.u32 %p1, %r2, 7;										// 分支，对应加载shmem代码段
+@%p1 bra $L__BB0_2;
+
+cvta.to.global.u64 %rd4, %rd1;									// rd4为A地址
+shl.b32 %r3, %r2, 2;											// laneId左移2位，将字节对齐到uint32_t
+mul.wide.u32 %rd5, %r3, 4;										// 对应代码&A[laneId * WMMA_K/8]，rd5为偏移
+add.s64 %rd6, %rd4, %rd5;										// rd6为线程特定的A地址
+shl.b32 %r4, %r2, 4;											// laneId左移4位，包含对齐到字节以及数组每行4个
+mov.u32 %r5, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A;			// r5指向shmemA开头
+add.s32 %r6, %r5, %r4;											// r6指向每个线程对应的shmemA位置
+ld.global.nc.v4.u32 {%r7, %r8, %r9, %r10}, [%rd6];				// 每个线程加载A数据
+st.shared.v4.u32 [%r6], {%r7, %r8, %r9, %r10};					// 将加载的数据放进shmemA
+cvta.to.global.u64 %rd7, %rd2;
+add.s64 %rd8, %rd7, %rd5;
+mov.u32 %r15, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B;
+add.s32 %r16, %r15, %r4;
+ld.global.nc.v4.u32 {%r17, %r18, %r19, %r20}, [%rd8];
+st.shared.v4.u32 [%r16], {%r17, %r18, %r19, %r20};
+
+$L__BB0_2:
+shl.b32 %r35, %r1, 4;
+and.b32 %r36, %r35, 112;										// laneId模8
+mov.u32 %r37, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_A;		// shmemA在r37
+add.s32 %r26, %r37, %r36;										// 每个线程加载shmemA的地址
+
+	ldmatrix.sync.aligned.m8n8.x1.shared.b16 {%r25}, [%r26];	// shmemA数据加载到r25
+
+
+	mov.u32 %r38, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_B;
+add.s32 %r28, %r38, %r36;
+
+	ldmatrix.sync.aligned.m8n8.x1.shared.b16 {%r27}, [%r28];	// shmemB数据加载到r27
+
+
+	mov.u32 %r34, 0;											// 初始化RC寄存器为0
+
+	mma.sync.aligned.m8n8k32.row.col.s32.s4.s4.s32 {%r29, %r30}, {%r25}, {%r27}, {%r34, %r34};
+																// 计算结果存放在r29、r30
+
+	shl.b32 %r39, %r2, 3;
+and.b32 %r40, %r39, 224;
+mov.u32 %r41, _ZZ19imma8832NaiveKernelPKjS0_PjE7shmem_C;
+add.s32 %r42, %r41, %r40;
+shl.b32 %r43, %r1, 3;
+and.b32 %r44, %r43, 24;
+add.s32 %r45, %r42, %r44;
+st.shared.u32 [%r45], %r29;
+st.shared.u32 [%r45+4], %r30;
+setp.gt.u32 %p2, %r2, 15;
+@%p2 bra $L__BB0_4;
+
+shl.b32 %r46, %r2, 2;
+cvta.to.global.u64 %rd9, %rd3;
+mul.wide.u32 %rd10, %r46, 4;
+add.s64 %rd11, %rd9, %rd10;
+shl.b32 %r47, %r2, 4;
+and.b32 %r48, %r47, 480;
+add.s32 %r50, %r41, %r48;
+and.b32 %r52, %r35, 16;
+add.s32 %r53, %r50, %r52;
+ld.shared.v4.u32 {%r54, %r55, %r56, %r57}, [%r53];
+st.global.v4.u32 [%rd11], {%r54, %r55, %r56, %r57};
+
+$L__BB0_4:
+ret;
+
+}
+

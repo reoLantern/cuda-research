@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "simpleimma",
+            "type": "shell",
+            "command": "/usr/local/cuda-11.3/bin/nvcc",
+            "args": [
+                "-g",
+                "-G",
+                "-o",
+                "${workspaceFolder}/cuda-code/6_simpleimma/simpleimma",
+                "${workspaceFolder}/cuda-code/6_simpleimma/simpleimma.cu",
+                // include 头文件
+                "-I",
+                "/usr/local/cuda-11.3/include",
+                "-gencode",
+                "arch=compute_86,code=\"sm_86,compute_86\""
+            ]
+        }
+    ]
+}
