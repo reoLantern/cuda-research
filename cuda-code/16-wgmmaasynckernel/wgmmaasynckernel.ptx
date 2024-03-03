@@ -1,0 +1,95 @@
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_90a
+code version = [8,3]
+host = linux
+compile_size = 64bit
+compressed
+
+
+
+
+
+
+
+
+.version 8.3
+.target sm_90a
+.address_size 64
+
+
+
+.visible .entry _Z11wgmma_test1PfPm(
+.param .u64 _Z11wgmma_test1PfPm_param_0,
+.param .u64 _Z11wgmma_test1PfPm_param_1
+)
+{
+.reg .f32 %f<25>;
+.reg .b64 %rd<11>;
+
+
+ld.param.u64 %rd7, [_Z11wgmma_test1PfPm_param_0];
+ld.param.u64 %rd8, [_Z11wgmma_test1PfPm_param_1];
+cvta.to.global.u64 %rd9, %rd7;
+cvta.to.global.u64 %rd10, %rd8;
+ld.global.u64 %rd1, [%rd10];
+ld.global.u64 %rd2, [%rd10+8];
+ld.global.u64 %rd4, [%rd10+24];
+ld.global.u64 %rd3, [%rd10+16];
+ld.global.f32 %f17, [%rd9];
+ld.global.f32 %f18, [%rd9+4];
+ld.global.f32 %f19, [%rd9+8];
+ld.global.f32 %f20, [%rd9+12];
+ld.global.f32 %f5, [%rd9+16];
+ld.global.f32 %f6, [%rd9+20];
+ld.global.f32 %f7, [%rd9+24];
+ld.global.f32 %f8, [%rd9+28];
+
+	{
+wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16
+{%f17, %f18, %f19, %f20}, %rd1, %rd2,1,1,1,0,0;
+wgmma.commit_group.sync.aligned;wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16
+{%f5, %f6, %f7, %f8}, %rd3, %rd4,1,1,1,0,0;
+wgmma.commit_group.sync.aligned;}
+
+
+	add.s64 %rd5, %rd1, 1;
+add.s64 %rd6, %rd2, 1;
+
+	wgmma.fence.sync.aligned;
+
+	
+	{
+wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16
+{%f17, %f18, %f19, %f20}, %rd5, %rd6,1,1,1,0,0;
+wgmma.commit_group.sync.aligned;wgmma.wait_group.sync.aligned 1;}
+
+
+	st.global.f32 [%rd9], %f17;
+st.global.f32 [%rd9+4], %f18;
+st.global.f32 [%rd9+8], %f19;
+st.global.f32 [%rd9+12], %f20;
+st.global.f32 [%rd9+16], %f5;
+st.global.f32 [%rd9+20], %f6;
+st.global.f32 [%rd9+24], %f7;
+st.global.f32 [%rd9+28], %f8;
+ret;
+
+}
+
+
