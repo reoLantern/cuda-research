@@ -39,55 +39,81 @@ compressed
 .param .u64 _Z11wgmma_test1PfPm_param_1
 )
 {
-.reg .f32 %f<25>;
-.reg .b64 %rd<11>;
+.reg .f32 %f<145>;
+.reg .b64 %rd<15>;
 
 
-ld.param.u64 %rd7, [_Z11wgmma_test1PfPm_param_0];
-ld.param.u64 %rd8, [_Z11wgmma_test1PfPm_param_1];
-cvta.to.global.u64 %rd9, %rd7;
-cvta.to.global.u64 %rd10, %rd8;
-ld.global.u64 %rd1, [%rd10];
-ld.global.u64 %rd2, [%rd10+8];
-ld.global.u64 %rd4, [%rd10+24];
-ld.global.u64 %rd3, [%rd10+16];
-ld.global.f32 %f17, [%rd9];
-ld.global.f32 %f18, [%rd9+4];
-ld.global.f32 %f19, [%rd9+8];
-ld.global.f32 %f20, [%rd9+12];
-ld.global.f32 %f5, [%rd9+16];
-ld.global.f32 %f6, [%rd9+20];
-ld.global.f32 %f7, [%rd9+24];
-ld.global.f32 %f8, [%rd9+28];
+ld.param.u64 %rd11, [_Z11wgmma_test1PfPm_param_0];
+ld.param.u64 %rd12, [_Z11wgmma_test1PfPm_param_1];
+cvta.to.global.u64 %rd13, %rd11;
+cvta.to.global.u64 %rd14, %rd12;
+ld.global.u64 %rd1, [%rd14];
+ld.global.u64 %rd2, [%rd14+8];
+ld.global.u64 %rd4, [%rd14+24];
+ld.global.u64 %rd3, [%rd14+16];
+ld.global.f32 %f17, [%rd13];
+ld.global.f32 %f18, [%rd13+4];
+ld.global.f32 %f19, [%rd13+8];
+ld.global.f32 %f20, [%rd13+12];
+ld.global.f32 %f21, [%rd13+16];
+ld.global.f32 %f22, [%rd13+20];
+ld.global.f32 %f23, [%rd13+24];
+ld.global.f32 %f24, [%rd13+28];
+ld.global.f32 %f73, [%rd13+32];
+ld.global.f32 %f74, [%rd13+36];
+ld.global.f32 %f75, [%rd13+40];
+ld.global.f32 %f76, [%rd13+44];
+ld.global.f32 %f77, [%rd13+48];
+ld.global.f32 %f78, [%rd13+52];
+ld.global.f32 %f79, [%rd13+56];
+ld.global.f32 %f80, [%rd13+60];
 
 	{
 wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16
 {%f17, %f18, %f19, %f20}, %rd1, %rd2,1,1,1,0,0;
 wgmma.commit_group.sync.aligned;wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16
-{%f5, %f6, %f7, %f8}, %rd3, %rd4,1,1,1,0,0;
+{%f21, %f22, %f23, %f24}, %rd3, %rd4,1,1,1,0,0;
 wgmma.commit_group.sync.aligned;}
 
 
-	add.s64 %rd5, %rd1, 1;
-add.s64 %rd6, %rd2, 1;
-
+	
 	wgmma.fence.sync.aligned;
 
 	
 	{
-wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16
-{%f17, %f18, %f19, %f20}, %rd5, %rd6,1,1,1,0,0;
+wgmma.mma_async.sync.aligned.m64n16k16.f32.f16.f16
+{%f17, %f18, %f19, %f20, %f21, %f22, %f23, %f24}, %rd1, %rd2,1,1,1,0,0;
 wgmma.commit_group.sync.aligned;wgmma.wait_group.sync.aligned 1;}
 
 
-	st.global.f32 [%rd9], %f17;
-st.global.f32 [%rd9+4], %f18;
-st.global.f32 [%rd9+8], %f19;
-st.global.f32 [%rd9+12], %f20;
-st.global.f32 [%rd9+16], %f5;
-st.global.f32 [%rd9+20], %f6;
-st.global.f32 [%rd9+24], %f7;
-st.global.f32 [%rd9+28], %f8;
+	
+	wgmma.fence.sync.aligned;
+
+	
+	{
+wgmma.mma_async.sync.aligned.m64n32k16.f32.f16.f16
+{%f17, %f18, %f19, %f20, %f21, %f22, %f23, %f24, %f73, %f74, %f75, %f76, %f77, %f78, %f79, %f80}, %rd1, %rd2,1,1,1,0,0;
+wgmma.commit_group.sync.aligned;wgmma.wait_group.sync.aligned 1;}
+
+
+	
+	wgmma.fence.sync.aligned;
+
+	
+	{
+wgmma.mma_async.sync.aligned.m64n64k16.f32.f16.f16
+{%f17, %f18, %f19, %f20, %f21, %f22, %f23, %f24, %f73, %f74, %f75, %f76, %f77, %f78, %f79, %f80, %f81, %f82, %f83, %f84, %f85, %f86, %f87, %f88, %f89, %f90, %f91, %f92, %f93, %f94, %f95, %f96}, %rd1, %rd2,1,1,1,0,0;
+wgmma.commit_group.sync.aligned;wgmma.wait_group.sync.aligned 1;}
+
+
+	st.global.f32 [%rd13], %f17;
+st.global.f32 [%rd13+4], %f18;
+st.global.f32 [%rd13+8], %f19;
+st.global.f32 [%rd13+12], %f20;
+st.global.f32 [%rd13+16], %f21;
+st.global.f32 [%rd13+20], %f22;
+st.global.f32 [%rd13+24], %f23;
+st.global.f32 [%rd13+28], %f24;
 ret;
 
 }
