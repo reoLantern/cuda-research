@@ -1,0 +1,208 @@
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_90a
+code version = [8,4]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions = 
+
+//
+//
+//
+//
+//
+//
+
+.version 8.4
+.target sm_90a
+.address_size 64
+
+//
+//
+//
+
+.visible .entry _Z14add_one_kernelPim(
+.param .u64 _Z14add_one_kernelPim_param_0,// data
+.param .u64 _Z14add_one_kernelPim_param_1// offset
+)
+{
+.reg .pred %p<10>;
+.reg .b32 %r<33>;
+.reg .b64 %rd<25>;
+//
+.shared .align 16 .b8 _ZZ14add_one_kernelPimE9smem_data[4096];// smem_data
+//
+.shared .align 8 .b8 _ZZ14add_one_kernelPimE3bar[8];//__shared__ barrier bar;
+
+ld.param.u64 %rd6, [_Z14add_one_kernelPim_param_0];
+ld.param.u64 %rd7, [_Z14add_one_kernelPim_param_1];
+mov.u32 %r1, %tid.x;
+setp.ne.s32 %p1, %r1, 0;// if (tid.x != 0): %p1 = 1; else: %p1 = 0;
+@%p1 bra $L__BB0_2; // if (tid.x != 0): goto $L__BB0_2;
+
+mov.u32 %r7, %ntid.x;   //%r7 = nthreads_in_blockdim.x
+mov.u32 %r6, _ZZ14add_one_kernelPimE3bar;//shared中barrier加载到register
+//
+mbarrier.init.shared.b64 [%r6], %r7;    //init(&bar, blockDim.x); 
+//
+//
+fence.proxy.async.shared::cta; // cde::fence_proxy_async_shared_cta();
+
+//
+
+$L__BB0_2:
+setp.eq.s32 %p2, %r1, 0;
+bar.sync 0;         // __syncthreads();
+@%p2 bra $L__BB0_4; // if (tid.x == 0): goto $L__BB0_4;
+
+mov.u32 %r8, _ZZ14add_one_kernelPimE3bar;
+mov.u32 %r9, 1;
+//
+mbarrier.arrive.shared::cta.b64 %rd24, [%r8], %r9; //
+// ↑ tid.x!=0的线程对shared中barrier做arrive
+bra.uni $L__BB0_5;  // unconditional jump to $L__BB0_5
+
+$L__BB0_4:  // tid.x == 0
+cvta.to.global.u64 %rd11, %rd6; // data
+shl.b64 %rd12, %rd7, 2;         // offset * 4 -> 按字节偏移
+add.s64 %rd9, %rd11, %rd12;     // source数据的地址
+mov.u32 %r10, _ZZ14add_one_kernelPimE9smem_data;// destination地址
+mov.u32 %r14, 4096;
+mov.u32 %r12, _ZZ14add_one_kernelPimE3bar;
+//
+cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [%r10], [%rd9], %r14, [%r12];
+                                                                // dst,    src,   size,  bar
+//
+//
+mbarrier.arrive.expect_tx.release.cta.shared.b64 %rd24, [%r12], %r14; //
+//                        release                        bar,   size
+
+$L__BB0_5: // reconvergence
+//
+mov.u64 %rd13, %globaltimer;
+//
+mov.u32 %r16, _ZZ14add_one_kernelPimE3bar;
+// 以下是bar.wait(std::move(token));的逻辑
+{
+.reg .pred p;
+mbarrier.try_wait.shared.b64 p, [%r16], %rd24; // 所有线程都arrive？
+selp.b32 %r15, 1, 0, p; // if p==1: %r15 = 1; else: %r15 = 0;
+}
+//
+setp.ne.s32 %p3, %r15, 0;
+@%p3 bra $L__BB0_14;
+
+mov.u32 %r32, 0;
+
+$L__BB0_7:
+setp.lt.s32 %p4, %r32, 16;
+@%p4 bra $L__BB0_12;
+bra.uni $L__BB0_8;  // unconditional jump to $L__BB0_8
+
+$L__BB0_12:
+add.s32 %r32, %r32, 1;
+bra.uni $L__BB0_13;
+
+$L__BB0_8:
+//
+mov.u64 %rd15, %globaltimer;
+//
+sub.s64 %rd5, %rd15, %rd13; // 所用时间
+setp.lt.s64 %p5, %rd5, 4000000;
+@%p5 bra $L__BB0_10;
+bra.uni $L__BB0_9;
+
+$L__BB0_10:
+setp.lt.s64 %p6, %rd5, 40000;
+@%p6 bra $L__BB0_13;
+
+shr.s64 %rd16, %rd5, 63;
+shr.u64 %rd17, %rd16, 62;
+add.s64 %rd18, %rd5, %rd17;
+shr.u64 %rd19, %rd18, 2;
+cvt.u32.u64 %r19, %rd19;
+//
+nanosleep.u32 %r19;
+// nanosleep: Suspend the thread for an approximate delay given in nanoseconds.
+// 若太长时间没有arrive，则暂停
+bra.uni $L__BB0_13;
+
+$L__BB0_9:
+mov.u32 %r18, 1000000;
+//
+nanosleep.u32 %r18;
+//
+
+$L__BB0_13:
+//
+{
+.reg .pred p;
+mbarrier.try_wait.shared.b64 p, [%r16], %rd24;
+selp.b32 %r20, 1, 0, p;
+}
+// 
+setp.eq.s32 %p7, %r20, 0;
+@%p7 bra $L__BB0_7;
+// shared memory barrier wait成功
+$L__BB0_14: // 以下是compute saxpy部分
+mov.u32 %r22, %ctaid.x; // blockIdx in grid
+mov.u32 %r23, %ntid.x;  // nthreads_in_blockdim.x
+mad.lo.s32 %r5, %r22, %r23, %r1;
+setp.gt.u32 %p8, %r5, 1023;
+@%p8 bra $L__BB0_16;
+
+shl.b32 %r24, %r5, 2;
+mov.u32 %r25, _ZZ14add_one_kernelPimE9smem_data;
+add.s32 %r26, %r25, %r24;
+ld.shared.u32 %r27, [%r26];
+add.s32 %r28, %r27, 1;
+st.shared.u32 [%r26], %r28;
+
+$L__BB0_16:
+//
+fence.proxy.async.shared::cta; 
+
+//
+bar.sync 0;
+@%p1 bra $L__BB0_18;
+
+cvta.to.global.u64 %rd22, %rd6;
+shl.b64 %rd23, %rd7, 2;
+add.s64 %rd21, %rd22, %rd23;
+mov.u32 %r29, _ZZ14add_one_kernelPimE9smem_data;
+mov.u32 %r30, 4096;
+//
+cp.async.bulk.global.shared::cta.bulk_group [%rd21], [%r29], %r30;
+
+//
+//
+cp.async.bulk.commit_group;
+
+//
+//
+cp.async.bulk.wait_group.read 0; 
+
+//
+
+$L__BB0_18:
+ret;
+
+}
+
+

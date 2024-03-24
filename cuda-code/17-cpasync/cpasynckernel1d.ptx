@@ -1,0 +1,75 @@
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_90a
+code version = [8,4]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions = 
+
+//
+//
+//
+//
+//
+//
+
+.version 8.4
+.target sm_90a
+.address_size 64
+
+//
+//
+//
+
+.visible .entry _Z14add_one_kernelPim(
+.param .u64 _Z14add_one_kernelPim_param_0,
+.param .u64 _Z14add_one_kernelPim_param_1
+)
+{
+.reg .pred %p<2>;
+.reg .b32 %r<5>;
+.reg .b64 %rd<6>;
+//
+.shared .align 16 .b8 _ZZ14add_one_kernelPimE9smem_data[4096];
+//
+.shared .align 8 .b8 _ZZ14add_one_kernelPimE3bar[8];
+
+ld.param.u64 %rd1, [_Z14add_one_kernelPim_param_0];
+ld.param.u64 %rd2, [_Z14add_one_kernelPim_param_1];
+mov.u32 %r1, %tid.x;
+setp.ne.s32 %p1, %r1, 0;
+@%p1 bra $L__BB0_2;
+
+cvta.to.global.u64 %rd4, %rd1;
+shl.b64 %rd5, %rd2, 2;
+add.s64 %rd3, %rd4, %rd5;
+mov.u32 %r2, _ZZ14add_one_kernelPimE9smem_data;
+mov.u32 %r3, 4096;
+mov.u32 %r4, _ZZ14add_one_kernelPimE3bar;
+//
+cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [%r2], [%rd3], %r3, [%r4];
+
+//
+
+$L__BB0_2:
+ret;
+
+}
+
+

@@ -1,0 +1,96 @@
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+	code for sm_90
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+	code for sm_90a
+		Function : _Z14add_one_kernelPim
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_ACCELERATORS EF_CUDA_SM90 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM90)"
+        /*0000*/                   LDC R1, c[0x0][0x28] ;                        /* 0x00000a00ff017b82 */
+                                                                                 /* 0x000e240000000800 */
+        /*0010*/                   S2R R0, SR_TID.X ;                            /* 0x0000000000007919 */
+                                                                                 /* 0x000e640000002100 */
+        /*0020*/                   ISETP.NE.AND P0, PT, R0, RZ, PT ;             /* 0x000000ff0000720c */
+                                                                                 /* 0x002fda0003f05270 */
+        /*0030*/               @P0 EXIT ;                                        /* 0x000000000000094d */
+                                                                                 /* 0x000fea0003800000 */
+        /*0040*/                   S2UR UR8, SR_CgaCtaId ;                       /* 0x00000000000879c3 */
+                                        Move Special Register to Uniform Register                                         /* 0x000e620000008800 */
+        /*0050*/                   UMOV UR5, 0x400 ;                             /* 0x0000040000057882 */
+                                        0x400 = 1024, 为shared mem块大小(按int)                                         /* 0x000fe20000000000 */
+        /*0060*/                   ULDC.64 UR12, c[0x0][0x218] ;                 /* 0x00008600000c7ab9 */
+                                        UR12 = data                                         /* 0x000fe20000000a00 */
+        /*0070*/                   ULDC.64 UR10, c[0x0][0x210] ;                 /* 0x00008400000a7ab9 */
+                                        UR10 = offset                                         /* 0x000fe20000000a00 */
+        /*0080*/                   UIADD3 UR7, UR5, 0x1000, URZ ;                /* 0x0000100005077890 */
+                                        0x1000 = 4096, 为shared mem块大小(按字节)                                         /* 0x000fe2000fffe03f */
+        /*0090*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x80, 0x0 ;     /* 0x000000000000781c */
+                                        Predicate Logic Operation                                         /* 0x000fe20003f0f070 */
+        /*00a0*/                   ULEA UR4, UP0, UR12, UR10, 0x2 ;              /* 0x0000000a0c047291 */
+                                        Uniform Load Effective Address, UR4为source address                                         /* 0x000fe4000f80103f */
+        /*00b0*/                   UPRMT UR6, UR8, 0x654, UR5 ;                  /* 0x0000065408067896 */
+                                                                                 /* 0x002fe40008000005 */
+        /*00c0*/                   UPRMT UR7, UR8, 0x654, UR7 ;                  /* 0x0000065408077896 */
+                                                                                 /* 0x000fc40008000007 */
+        /*00d0*/                   ULEA.HI.X UR5, UR12, UR11, UR13, 0x2, UP0 ;   /* 0x0000000b0c057291 */
+                                                                                 /* 0x000fe200080f140d */
+        /*00e0*/                   UMOV UR8, 0x100 ;                             /* 0x0000010000087882 */
+                                                                                 /* 0x000fd60000000000 */
+        /*00f0*/               @P0 ELECT P1, URZ, PT ;                           /* 0x00000000003f082f */
+                                                                                 /* 0x000fe20003820000 */
+        /*0100*/                   UBLKCP.S.G [UR6], [UR4], UR8(=0x100) ;                /* 0x00000006040073ba */
+                                        Bulk Data Copy, UR4=source, UR6=destination, UR8=count(4096/0x100=16, copysize对齐到16byte)                                         /* 0x0003d80008000208 */
+        /*0110*/               @P1 PLOP3.LUT P0, PT, P1, PT, PT, 0x8, 0x0 ;      /* 0x000000000000181c */
+                                                                                 /* 0x000fe40000f0e170 */
+        /*0120*/                   PLOP3.LUT P1, PT, PT, PT, PT, 0x8, 0x0 ;      /* 0x000000000000781c */
+                                                                                 /* 0x000fd60003f2e170 */
+        /*0130*/               @P0 BRA.U.ANY 0xf0 ;                              /* 0xfffffffd00ec0947 */
+                                                                                 /* 0x002fea000393ffff */
+        /*0140*/                   EXIT ;                                        /* 0x000000000000794d */
+                                                                                 /* 0x000fea0003800000 */
+        /*0150*/                   BRA 0x150;                                    /* 0xfffffffc00fc7947 */
+                                                                                 /* 0x000fc0000383ffff */
+        /*0160*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0170*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0180*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0190*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01a0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01b0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01c0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01d0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01e0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01f0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+		..........
+
+
+
+Fatbin ptx code:
+================
+arch = sm_90a
+code version = [8,4]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions = 

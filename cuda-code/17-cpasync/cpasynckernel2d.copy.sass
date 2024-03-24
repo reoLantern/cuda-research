@@ -1,0 +1,96 @@
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+	code for sm_90
+
+Fatbin elf code:
+================
+arch = sm_90a
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+	code for sm_90a
+		Function : _Z6kernel14CUtensorMap_stii
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_ACCELERATORS EF_CUDA_SM90 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM90)"
+        /*0000*/                   LDC R1, c[0x0][0x28] ;                        /* 0x00000a00ff017b82 */
+                                        Load Constant                                         /* 0x000e240000000800 */
+        /*0010*/                   S2R R0, SR_TID.X ;                            /* 0x0000000000007919 */
+                                        Move Special Register to Register  R0=tid.x                                         /* 0x000e640000002100 */
+        /*0020*/                   ISETP.NE.AND P0, PT, R0, RZ, PT ;             /* 0x000000ff0000720c */
+                                        Integer Compare And Set Predicate                                         /* 0x002fda0003f05270 */
+        /*0030*/               @P0 EXIT ;                                        /* 0x000000000000094d */
+                                                                                 /* 0x000fea0003800000 */
+        /*0040*/                   S2UR UR6, SR_CgaCtaId ;                       /* 0x00000000000679c3 */
+                                        Move Special Register to Uniform Register  UR6 = CTA.ID                                         /* 0x000e620000008800 */
+        /*0050*/                   UMOV UR4, 0x400 ;                             /* 0x0000040000047882 */
+                                        Uniform Move                                         /* 0x000fe20000000000 */
+        /*0060*/                   ULDC.64 UR8, c[0x0][0x198] ;                  /* 0x0000660000087ab9 */
+                                        Load from Constant Memory into a Uniform Register   UR8 = tensor_map                                      /* 0x000fe20000000a00 */
+        /*0070*/                   UIADD3 UR5, UR4, 0x4000, URZ ;                /* 0x0000400004057890 */
+                                        Uniform Integer Addition                                         /* 0x000fe2000fffe03f */
+        /*0080*/                   PLOP3.LUT P0, PT, PT, PT, PT, 0x80, 0x0 ;     /* 0x000000000000781c */
+                                        Predicate Logic Operation                                         /* 0x000fe20003f0f070 */
+        /*0090*/                   UIADD3 UR8, UP0, UR8, 0x30, URZ ;             /* 0x0000003008087890 */
+                                                                                 /* 0x000fc8000ff1e03f */
+        /*00a0*/                   UIADD3.X UR9, URZ, UR9, URZ, UP0, !UPT ;      /* 0x000000093f097290 */
+                                                                                 /* 0x000fe400087fe43f */
+        /*00b0*/                   UPRMT UR4, UR6, 0x654, UR4 ;                  /* 0x0000065406047896 */
+                                        Uniform Byte Permute                                         /* 0x002fe40008000004 */
+        /*00c0*/                   UPRMT UR5, UR6, 0x654, UR5 ;                  /* 0x0000065406057896 */
+                                                                                 /* 0x000fc60008000005 */
+        /*00d0*/                   ULDC.64 UR6, c[0x0][0x2c0] ;                  /* 0x0000b00000067ab9 */
+                                                                                 /* 0x000fd20000000a00 */
+        /*00e0*/               @P0 ELECT P1, URZ, PT ;                           /* 0x00000000003f082f */
+                                        Elect a Leader Thread                                         /* 0x000fe20003820000 */
+        /*00f0*/                   UTMALDG.2D [UR4], [UR8] ;                     /* 0x00000004080075b4 */
+                                        Tensor Load from Global to Shared Memory UR4=shmem, UR8=tensor_map                                        /* 0x0003d80008008000 */
+        /*0100*/               @P1 PLOP3.LUT P0, PT, P1, PT, PT, 0x8, 0x0 ;      /* 0x000000000000181c */
+                                        Predicate Logic Operation                                         /* 0x000fe40000f0e170 */
+        /*0110*/                   PLOP3.LUT P1, PT, PT, PT, PT, 0x8, 0x0 ;      /* 0x000000000000781c */
+                                                                                 /* 0x000fd60003f2e170 */
+        /*0120*/               @P0 BRA.U.ANY 0xe0 ;                              /* 0xfffffffd00ec0947 */
+                                        Relative Branch                                         /* 0x002fea000393ffff */
+        /*0130*/                   EXIT ;                                        /* 0x000000000000794d */
+                                                                                 /* 0x000fea0003800000 */
+        /*0140*/                   BRA 0x140;                                    /* 0xfffffffc00fc7947 */
+                                                                                 /* 0x000fc0000383ffff */
+        /*0150*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0160*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0170*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0180*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*0190*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01a0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01b0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01c0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01d0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01e0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+        /*01f0*/                   NOP;                                          /* 0x0000000000007918 */
+                                                                                 /* 0x000fc00000000000 */
+		..........
+
+
+
+Fatbin ptx code:
+================
+arch = sm_90a
+code version = [8,4]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions = 
