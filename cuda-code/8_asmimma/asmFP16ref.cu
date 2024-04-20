@@ -21,8 +21,8 @@ __global__ void mma16816NaiveKernel(const half *__restrict__ A, const half *__re
     const size_t laneId = threadIdx.x % WARP_SIZE;
 
     uint32_t RA[4];
-    uint32_t RB[2];
-    uint32_t RC[2] = {0, 0};
+    uint32_t RB[8];
+    uint32_t RC[4] = {0, 0, 0, 0};
 
     *((int4 *)(&shmem_A[laneId / 2][0]) + laneId % 2) =
         *((int4 *)(&A[(laneId / 2) * K]) + laneId % 2);
@@ -51,10 +51,14 @@ __global__ void mma16816NaiveKernel(const half *__restrict__ A, const half *__re
                  : "=r"(RB[0]), "=r"(RB[1])
                  : "r"(shmem_B_lane_addr));
 
+    // asm volatile(
+    //     "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
+    //     : "=r"(RC[0]), "=r"(RC[1])
+    //     : "r"(RA[0]), "r"(RA[1]), "r"(RA[2]), "r"(RA[3]), "r"(RB[0]), "r"(RB[1]), "r"(RC[0]), "r"(RC[1]));
     asm volatile(
-        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
+        "mma.sync.aligned.m16n8k8.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3}, {%4}, {%5, %6};\n"
         : "=r"(RC[0]), "=r"(RC[1])
-        : "r"(RA[0]), "r"(RA[1]), "r"(RA[2]), "r"(RA[3]), "r"(RB[0]), "r"(RB[1]), "r"(RC[0]), "r"(RC[1]));
+        : "r"(RA[0]), "r"(RA[1]), "r"(RB[0]), "r"(RC[0]), "r"(RC[1]));
 
     __syncthreads();
 
@@ -69,4 +73,9 @@ __global__ void mma16816NaiveKernel(const half *__restrict__ A, const half *__re
     }
 
     __syncthreads();
+}
+
+int main()
+{
+    return 0;
 }

@@ -176,7 +176,7 @@ st.shared.u32 [%r26], %r28;
 
 $L__BB0_16:
 //
-fence.proxy.async.shared::cta; 
+fence.proxy.async.shared::cta;  // 5. Wait for shared memory writes to be visible to TMA engine.
 
 //
 bar.sync 0;

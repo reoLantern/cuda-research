@@ -2,12 +2,12 @@
 
 object=asmimma
 simplekernel=simplekernel
-asmkernel=asmkernel
+asmkernel=asmFP16ref
 asmkernelhopper=asmkernelhopper
 simplekernelhopper=simplekernelhopper
 
-nvcc=${CUDA_PATH}/bin/nvcc
-cuobjdump=${CUDA_PATH}/bin/cuobjdump
+nvcc=${CUDA_INSTALL_PATH}/bin/nvcc
+cuobjdump=${CUDA_INSTALL_PATH}/bin/cuobjdump
 
 all:
 	$(nvcc) -o $(object) $(object).cu -gencode=arch=compute_86,code=\"sm_86,compute_86\"
@@ -28,7 +28,7 @@ simplekernel:
 	$(cuobjdump) -ptx $(simplekernel) > $(simplekernel).ptx && $(cuobjdump) -sass $(simplekernel) > $(simplekernel).sass
 
 asmkernel:
-	$(nvcc) -o $(asmkernel) $(asmkernel).cu -gencode=arch=compute_75,code=\"sm_75,compute_75\" && \
+	$(nvcc) -o $(asmkernel) $(asmkernel).cu -gencode=arch=compute_86,code=\"sm_86,compute_86\" && \
 	$(cuobjdump) -ptx $(asmkernel) > $(asmkernel).ptx && $(cuobjdump) -sass $(asmkernel) > $(asmkernel).sass
 
 asmkernelhopper:

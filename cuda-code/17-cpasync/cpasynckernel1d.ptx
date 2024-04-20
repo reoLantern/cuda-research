@@ -42,32 +42,170 @@ ptxasOptions =
 .param .u64 _Z14add_one_kernelPim_param_1
 )
 {
-.reg .pred %p<2>;
-.reg .b32 %r<5>;
-.reg .b64 %rd<6>;
+.reg .pred %p<11>;
+.reg .b32 %r<35>;
+.reg .b64 %rd<25>;
 //
 .shared .align 16 .b8 _ZZ14add_one_kernelPimE9smem_data[4096];
 //
 .shared .align 8 .b8 _ZZ14add_one_kernelPimE3bar[8];
 
-ld.param.u64 %rd1, [_Z14add_one_kernelPim_param_0];
-ld.param.u64 %rd2, [_Z14add_one_kernelPim_param_1];
-mov.u32 %r1, %tid.x;
-setp.ne.s32 %p1, %r1, 0;
+ld.param.u64 %rd6, [_Z14add_one_kernelPim_param_0];
+ld.param.u64 %rd7, [_Z14add_one_kernelPim_param_1];
+mov.u32 %r34, %tid.x;
+setp.ne.s32 %p1, %r34, 0;
 @%p1 bra $L__BB0_2;
 
-cvta.to.global.u64 %rd4, %rd1;
-shl.b64 %rd5, %rd2, 2;
-add.s64 %rd3, %rd4, %rd5;
-mov.u32 %r2, _ZZ14add_one_kernelPimE9smem_data;
-mov.u32 %r3, 4096;
-mov.u32 %r4, _ZZ14add_one_kernelPimE3bar;
+mov.u32 %r9, %ntid.x;
+mov.u32 %r8, _ZZ14add_one_kernelPimE3bar;
 //
-cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [%r2], [%rd3], %r3, [%r4];
+mbarrier.init.shared.b64 [%r8], %r9;
+//
+//
+fence.proxy.async.shared::cta; 
 
 //
 
 $L__BB0_2:
+bar.sync 0;
+or.b32 %r10, %r34, 128;
+setp.eq.s32 %p2, %r10, 128;
+@%p2 bra $L__BB0_3;
+bra.uni $L__BB0_4;
+
+$L__BB0_3:
+cvta.to.global.u64 %rd10, %rd6;
+shl.b64 %rd11, %rd7, 2;
+add.s64 %rd8, %rd10, %rd11;
+mov.u32 %r11, _ZZ14add_one_kernelPimE9smem_data;
+mov.u32 %r15, 4096;
+mov.u32 %r13, _ZZ14add_one_kernelPimE3bar;
+//
+cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [%r11], [%rd8], %r15, [%r13];
+
+//
+//
+mbarrier.arrive.expect_tx.release.cta.shared.b64 %rd24, [%r13], %r15; //
+//
+bra.uni $L__BB0_5;
+
+$L__BB0_4:
+mov.u32 %r16, _ZZ14add_one_kernelPimE3bar;
+mov.u32 %r17, 1;
+//
+mbarrier.arrive.shared::cta.b64 %rd24, [%r16], %r17; //
+//
+
+$L__BB0_5:
+//
+mov.u64 %rd13, %globaltimer;
+//
+mov.u32 %r19, _ZZ14add_one_kernelPimE3bar;
+//
+{
+.reg .pred p;
+mbarrier.try_wait.shared.b64 p, [%r19], %rd24;
+selp.b32 %r18, 1, 0, p;
+}
+//
+setp.ne.s32 %p3, %r18, 0;
+@%p3 bra $L__BB0_14;
+
+mov.u32 %r33, 0;
+
+$L__BB0_7:
+setp.lt.s32 %p4, %r33, 16;
+@%p4 bra $L__BB0_12;
+bra.uni $L__BB0_8;
+
+$L__BB0_12:
+add.s32 %r33, %r33, 1;
+bra.uni $L__BB0_13;
+
+$L__BB0_8:
+//
+mov.u64 %rd15, %globaltimer;
+//
+sub.s64 %rd5, %rd15, %rd13;
+setp.lt.s64 %p5, %rd5, 4000000;
+@%p5 bra $L__BB0_10;
+bra.uni $L__BB0_9;
+
+$L__BB0_10:
+setp.lt.s64 %p6, %rd5, 40000;
+@%p6 bra $L__BB0_13;
+
+shr.s64 %rd16, %rd5, 63;
+shr.u64 %rd17, %rd16, 62;
+add.s64 %rd18, %rd5, %rd17;
+shr.u64 %rd19, %rd18, 2;
+cvt.u32.u64 %r22, %rd19;
+//
+nanosleep.u32 %r22;
+//
+bra.uni $L__BB0_13;
+
+$L__BB0_9:
+mov.u32 %r21, 1000000;
+//
+nanosleep.u32 %r21;
+//
+
+$L__BB0_13:
+//
+{
+.reg .pred p;
+mbarrier.try_wait.shared.b64 p, [%r19], %rd24;
+selp.b32 %r23, 1, 0, p;
+}
+//
+setp.eq.s32 %p7, %r23, 0;
+@%p7 bra $L__BB0_7;
+
+$L__BB0_14:
+setp.gt.u32 %p8, %r34, 1023;
+@%p8 bra $L__BB0_17;
+
+mov.u32 %r5, %ntid.x;
+mov.u32 %r26, _ZZ14add_one_kernelPimE9smem_data;
+
+$L__BB0_16:
+shl.b32 %r25, %r34, 2;
+add.s32 %r27, %r26, %r25;
+ld.shared.u32 %r28, [%r27];
+add.s32 %r29, %r28, 1;
+st.shared.u32 [%r27], %r29;
+add.s32 %r34, %r34, %r5;
+setp.lt.u32 %p9, %r34, 1024;
+@%p9 bra $L__BB0_16;
+
+$L__BB0_17:
+//
+fence.proxy.async.shared::cta; 
+
+//
+bar.sync 0;
+@%p1 bra $L__BB0_19;
+
+cvta.to.global.u64 %rd22, %rd6;
+shl.b64 %rd23, %rd7, 2;
+add.s64 %rd21, %rd22, %rd23;
+mov.u32 %r30, _ZZ14add_one_kernelPimE9smem_data;
+mov.u32 %r31, 4096;
+//
+cp.async.bulk.global.shared::cta.bulk_group [%rd21], [%r30], %r31;
+
+//
+
+$L__BB0_19:
+//
+cp.async.bulk.commit_group;
+
+//
+//
+cp.async.bulk.wait_group.read 0; 
+
+//
 ret;
 
 }

@@ -1,0 +1,157 @@
+
+Fatbin elf code:
+================
+arch = sm_86
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin elf code:
+================
+arch = sm_86
+code version = [1,7]
+host = linux
+compile_size = 64bit
+
+Fatbin ptx code:
+================
+arch = sm_86
+code version = [8,4]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions = 
+
+//
+//
+//
+//
+//
+//
+
+.version 8.4
+.target sm_86
+.address_size 64
+
+//
+//
+//
+//
+
+.visible .entry _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm(
+.param .u64 _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_0,
+.param .u64 _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_1,
+.param .u64 _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_2,
+.param .u64 _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_3,
+.param .u64 _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_4,
+.param .u64 _Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_5
+)
+{
+.reg .pred %p<3>;
+.reg .b32 %r<77>;
+.reg .b64 %rd<25>;
+//
+.shared .align 2 .b8 _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_A[512];
+//
+.shared .align 2 .b8 _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_B[256];
+//
+.shared .align 2 .b8 _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_C[256];
+
+ld.param.u64 %rd7, [_Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_0];
+ld.param.u64 %rd4, [_Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_1];
+ld.param.u64 %rd5, [_Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_2];
+ld.param.u64 %rd6, [_Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_4];
+ld.param.u64 %rd8, [_Z19mma16816NaiveKernelPK6__halfS1_PS_mmm_param_5];
+mov.u32 %r1, %tid.x;
+and.b32 %r4, %r1, 31;
+cvt.u64.u32 %rd1, %r4;
+shr.u64 %rd9, %rd1, 1;
+cvt.u32.u64 %r2, %rd9;
+shl.b32 %r5, %r2, 5;
+mov.u32 %r6, _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_A;
+add.s32 %r7, %r6, %r5;
+and.b32 %r3, %r1, 1;
+shl.b32 %r8, %r1, 4;
+and.b32 %r9, %r8, 16;
+add.s32 %r10, %r7, %r9;
+mul.lo.s64 %rd2, %rd9, %rd8;
+cvta.to.global.u64 %rd10, %rd7;
+shl.b64 %rd11, %rd2, 1;
+add.s64 %rd12, %rd10, %rd11;
+and.b64 %rd3, %rd1, 1;
+mul.wide.u32 %rd13, %r1, 16;
+and.b64 %rd14, %rd13, 16;
+add.s64 %rd15, %rd12, %rd14;
+ld.global.nc.v4.u32 {%r11, %r12, %r13, %r14}, [%rd15];
+st.shared.v4.u32 [%r10], {%r11, %r12, %r13, %r14};
+setp.gt.u32 %p1, %r4, 15;
+@%p1 bra $L__BB0_2;
+
+cvta.to.global.u64 %rd16, %rd4;
+mov.u32 %r20, _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_B;
+add.s32 %r21, %r20, %r5;
+shl.b32 %r22, %r3, 4;
+add.s32 %r23, %r21, %r22;
+add.s64 %rd18, %rd16, %rd11;
+shl.b64 %rd19, %rd3, 4;
+add.s64 %rd20, %rd18, %rd19;
+ld.global.nc.v4.u32 {%r24, %r25, %r26, %r27}, [%rd20];
+st.shared.v4.u32 [%r23], {%r24, %r25, %r26, %r27};
+
+$L__BB0_2:
+cvt.u32.u64 %r47, %rd1;
+setp.gt.u32 %p2, %r47, 15;
+bar.sync 0;
+shl.b32 %r48, %r1, 5;
+and.b32 %r49, %r48, 480;
+add.s32 %r51, %r6, %r49;
+and.b32 %r52, %r47, 16;
+add.s32 %r36, %r51, %r52;
+//
+ldmatrix.sync.aligned.x4.m8n8.shared.b16 {%r32, %r33, %r34, %r35}, [%r36];
+
+//
+and.b32 %r53, %r48, 224;
+mov.u32 %r54, _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_B;
+add.s32 %r55, %r54, %r53;
+shl.b32 %r56, %r1, 1;
+and.b32 %r57, %r56, 16;
+add.s32 %r39, %r55, %r57;
+//
+ldmatrix.sync.aligned.x2.m8n8.shared.b16 {%r37, %r38}, [%r39];
+
+//
+mov.u32 %r46, 0;
+//
+mma.sync.aligned.m16n8k8.row.col.f16.f16.f16.f16 {%r40, %r41}, {%r32, %r33}, {%r37}, {%r46, %r46};
+
+//
+bar.sync 0;
+shl.b32 %r58, %r47, 2;
+and.b32 %r59, %r58, 112;
+mov.u32 %r60, _ZZ19mma16816NaiveKernelPK6__halfS1_PS_mmmE7shmem_C;
+add.s32 %r61, %r60, %r59;
+shl.b32 %r62, %r1, 2;
+and.b32 %r63, %r62, 12;
+add.s32 %r64, %r61, %r63;
+st.shared.u32 [%r64], %r40;
+st.shared.u32 [%r64+128], %r41;
+bar.sync 0;
+@%p2 bra $L__BB0_4;
+
+mul.lo.s64 %rd21, %rd1, %rd6;
+cvta.to.global.u64 %rd22, %rd5;
+shl.b64 %rd23, %rd21, 1;
+add.s64 %rd24, %rd22, %rd23;
+shl.b32 %r66, %r47, 4;
+add.s32 %r68, %r60, %r66;
+ld.shared.v4.u32 {%r69, %r70, %r71, %r72}, [%r68];
+st.global.v4.u32 [%rd24], {%r69, %r70, %r71, %r72};
+
+$L__BB0_4:
+bar.sync 0;
+ret;
+
+}
+
+

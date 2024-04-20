@@ -3,12 +3,16 @@
 
 using namespace nvcuda;
 
-__global__ void wmma_ker(half *a, half *b, float *c)
+#define WMMA_M 8
+#define WMMA_N 32
+#define WMMA_K 16
+
+__global__ void wmma_ker(half *a, half *b, half *c)
 {
     // Declare the fragments
-    wmma::fragment<wmma::matrix_a, 16, 16, 16, half, wmma::col_major> a_frag;
-    wmma::fragment<wmma::matrix_b, 16, 16, 16, half, wmma::row_major> b_frag;
-    wmma::fragment<wmma::accumulator, 16, 16, 16, float> c_frag;
+    wmma::fragment<wmma::matrix_a, WMMA_M, WMMA_N, WMMA_K, half, wmma::row_major> a_frag;
+    wmma::fragment<wmma::matrix_b, WMMA_M, WMMA_N, WMMA_K, half, wmma::col_major> b_frag;
+    wmma::fragment<wmma::accumulator, WMMA_M, WMMA_N, WMMA_K, half> c_frag;
 
     // Initialize the output to zero
     wmma::fill_fragment(c_frag, 0.0f);
@@ -28,8 +32,8 @@ int main()
 {
 
     half *d_a, *h_a, *d_b, *h_b;
-    float *d_c, *h_c;
-    h_c = new float[16 * 16];
+    half *d_c, *h_c;
+    h_c = new half[16 * 16];
     h_b = new half[16 * 16];
     h_a = new half[16 * 16];
     cudaMalloc(&d_a, 16 * 16 * sizeof(half));
@@ -45,6 +49,6 @@ int main()
     wmma_ker<<<1, 32>>>(d_a, d_b, d_c);
     cudaMemcpy(h_c, d_c, 16 * 16 * sizeof(float), cudaMemcpyDeviceToHost);
     for (int i = 0; i < 16 * 16; i++)
-        std::cout << h_c[i] << ",";
+        std::cout << (float)h_c[i] << ",";
     std::cout << std::endl;
 }

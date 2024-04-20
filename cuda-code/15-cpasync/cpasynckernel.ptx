@@ -16,32 +16,35 @@ compile_size = 64bit
 Fatbin ptx code:
 ================
 arch = sm_90
-code version = [8,3]
+code version = [8,4]
 host = linux
 compile_size = 64bit
 compressed
+ptxasOptions = 
 
+//
+//
+//
+//
+//
+//
 
-
-
-
-
-
-
-.version 8.3
+.version 8.4
 .target sm_90
 .address_size 64
 
-
+//
+//
 
 .visible .entry _Z12cpasync_testPjS_(
 .param .u64 _Z12cpasync_testPjS__param_0,
 .param .u64 _Z12cpasync_testPjS__param_1
 )
 {
-.reg .b32 %r<11>;
+.reg .b32 %r<18>;
 .reg .b64 %rd<5>;
-
+//
+.shared .align 4 .b8 _ZZ12cpasync_testPjS_E5shmem[36];
 
 ld.param.u64 %rd1, [_Z12cpasync_testPjS__param_0];
 ld.param.u64 %rd2, [_Z12cpasync_testPjS__param_1];
@@ -49,16 +52,28 @@ cvta.to.global.u64 %rd3, %rd2;
 cvta.to.global.u64 %rd4, %rd1;
 ld.global.u32 %r2, [%rd4];
 ld.global.u32 %r1, [%rd3];
+mov.u32 %r11, 0;
+st.shared.u32 [_ZZ12cpasync_testPjS_E5shmem], %r11;
 ld.global.u32 %r4, [%rd4+4];
 ld.global.u32 %r3, [%rd3+4];
+mov.u32 %r12, 4;
+mov.u32 %r13, 1;
+st.shared.u32 [_ZZ12cpasync_testPjS_E5shmem+4], %r13;
 ld.global.u32 %r6, [%rd4+8];
 ld.global.u32 %r5, [%rd3+8];
+mov.u32 %r14, 2;
+st.shared.u32 [_ZZ12cpasync_testPjS_E5shmem+8], %r14;
 ld.global.u32 %r8, [%rd4+12];
 ld.global.u32 %r7, [%rd3+12];
+mov.u32 %r15, 3;
+st.shared.u32 [_ZZ12cpasync_testPjS_E5shmem+12], %r15;
 ld.global.u32 %r10, [%rd4+16];
 ld.global.u32 %r9, [%rd3+16];
-
-	{
+st.shared.u32 [_ZZ12cpasync_testPjS_E5shmem+16], %r12;
+mov.u32 %r16, 5;
+st.shared.u32 [_ZZ12cpasync_testPjS_E5shmem+20], %r16;
+//
+{
 cp.async.ca.shared.global [%r1], [%r2], 8;
 cp.async.cg.shared.global [%r3], [%r4], 16;
 cp.async.wait_all;
@@ -68,11 +83,13 @@ cp.async.cg.shared.global [%r7], [%r8], 16;
 cp.async.commit_group;
 cp.async.cg.shared.global [%r9], [%r10], 16;
 cp.async.commit_group;
-cp.async.wait_group 128;
+cp.async.wait_group 1;
 }
 
-
-	ret;
+//
+ld.shared.u32 %r17, [_ZZ12cpasync_testPjS_E5shmem+8];
+st.global.u32 [%rd4+4], %r17;
+ret;
 
 }
 
