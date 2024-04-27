@@ -6,7 +6,7 @@
 
 ## 调用mma.sync
 
-首先，在本文件turing_tensorop_conv2dfprop.cu中，通过以下代码进行矩阵运算。
+首先，在本文件/examples/09_turing_tensorop_conv2dfprop/turing_tensorop_conv2dfprop.cu中，通过以下代码进行矩阵运算。
 
 ```c++
 using Conv2dFpropKernel = typename cutlass::conv::kernel::DefaultConv2dFprop<
