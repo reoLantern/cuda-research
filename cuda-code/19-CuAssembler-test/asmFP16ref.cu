@@ -20,9 +20,14 @@ __global__ void mma16816NaiveKernel(const half *__restrict__ A, const half *__re
 
     const size_t laneId = threadIdx.x % WARP_SIZE;
 
-    uint32_t RA[4];
-    uint32_t RB[8];
-    uint32_t RC[4] = {0, 0, 0, 0};
+    uint32_t RA[16];
+    uint32_t RB[16];
+    uint32_t RC[10];
+
+    for (int i = 0; i < 10; i++)
+    {
+        RC[i] = *((uint32_t *)(&C[i + laneId * WARP_SIZE]));
+    }
 
     *((int4 *)(&shmem_A[laneId / 2][0]) + laneId % 2) =
         *((int4 *)(&A[(laneId / 2) * K]) + laneId % 2);
@@ -51,18 +56,62 @@ __global__ void mma16816NaiveKernel(const half *__restrict__ A, const half *__re
                  : "=r"(RB[0]), "=r"(RB[1])
                  : "r"(shmem_B_lane_addr));
 
-    asm volatile(
-        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-        : "=r"(RC[0]), "=r"(RC[1])
-        : "r"(RA[0]), "r"(RA[1]), "r"(RA[2]), "r"(RA[3]), "r"(RB[0]), "r"(RB[1]), "r"(RC[0]), "r"(RC[1]));
+
+    // asm volatile(
+    //     "mma.sync.aligned.m8n8k4.row.col.f16.f16.f16.f16 {%0, %1, %2, %3}, {%4, %5}, {%6, %7}, {%8, %9, %10, %11};\n"
+    //     : "=r"(RC[0]), "=r"(RC[1]), "=r"(RC[2]), "=r"(RC[3])
+    //     : "r"(RA[0]), "r"(RA[1]), "r"(RB[0]), "r"(RB[1]), "r"(RC[4]), "r"(RC[5]), "r"(RC[6]), "r"(RC[7]));
+
+    // asm volatile(
+    //     "mma.sync.aligned.m8n8k4.row.col.f32.f16.f16.f32 {%0, %1, %2, %3, %4, %5, %6, %7}, {%8, %9}, {%10, %11}, {%12, %13, %14, %15, %16, %17, %18, %19};\n"
+    //     : "=r"(RC[4]), "=r"(RC[5]), "=r"(RC[6]), "=r"(RC[7]), "=r"(RC[8]), "=r"(RC[9]), "=r"(RC[10]), "=r"(RC[11])
+    //     : "r"(RA[2]), "r"(RA[3]), "r"(RB[2]), "r"(RB[3]), "r"(RC[0]), "r"(RC[1]), "r"(RC[2]), "r"(RC[3]), "r"(RC[4]), "r"(RC[5]), "r"(RC[6]), "r"(RC[7]));
+
     asm volatile(
         "mma.sync.aligned.m16n8k8.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3}, {%4}, {%5, %6};\n"
         : "=r"(RC[0]), "=r"(RC[1])
-        : "r"(RA[0]), "r"(RA[1]), "r"(RB[0]), "r"(RC[0]), "r"(RC[1]));
+        : "r"(RA[0]), "r"(RA[1]), "r"(RB[0]), "r"(RC[2]), "r"(RC[1]));
+
+    asm volatile(
+        "mma.sync.aligned.m16n8k8.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3}, {%4}, {%5, %6};\n"
+        : "=r"(RC[4]), "=r"(RC[5])
+        : "r"(RA[2]), "r"(RA[3]), "r"(RB[5]), "r"(RC[0]), "r"(RC[1]));
+
+    RC[1] = RC[0] + RC[4];
+
+    asm volatile(
+        "mma.sync.aligned.m16n8k8.row.col.f32.f16.f16.f32 {%0, %1, %2, %3}, {%4, %5}, {%6}, {%7, %8, %9, %10};\n"
+        : "=r"(RC[1]), "=r"(RC[2]), "=r"(RC[3]), "=r"(RC[3])
+        : "r"(RA[2]), "r"(RA[3]), "r"(RB[4]), "r"(RC[0]), "r"(RC[1]), "r"(RC[2]), "r"(RC[3]));
 
     __syncthreads();
 
-    *((uint32_t *)(&shmem_C[laneId / 4][0]) + laneId % 4) = RC[0];
+    asm volatile(
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
+        : "=r"(RC[7]), "=r"(RC[8])
+        : "r"(RA[0]), "r"(RA[1]), "r"(RA[2]), "r"(RA[3]), "r"(RB[7]), "r"(RB[8]), "r"(RC[8]), "r"(RC[9]));
+
+    asm volatile(
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 {%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
+        : "=r"(RC[3]), "=r"(RC[4])
+        : "r"(RA[0]), "r"(RA[1]), "r"(RA[2]), "r"(RA[3]), "r"(RB[1]), "r"(RB[2]), "r"(RC[7]), "r"(RC[8]));
+
+    RC[0] = RC[0] + RC[4];
+    RC[1] = RC[1] + RC[5];
+
+
+    // // print RC[0~8]
+    // if (laneId == 0)
+    // {
+    //     printf("RC[0~7]: ");
+    //     for (int i = 0; i < 8; i++)
+    //     {
+    //         printf("%d ", RC[i]);
+    //     }
+    //     printf("\n");
+    // }
+
+    *((uint32_t *)(&shmem_C[laneId / 4][0]) + laneId % 4) = RC[laneId % 8];
     *((uint32_t *)(&shmem_C[laneId / 4 + 8][0]) + laneId % 4) = RC[1];
 
     __syncthreads();
