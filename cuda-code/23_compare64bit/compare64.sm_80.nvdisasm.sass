@@ -1,0 +1,646 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM80 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM80)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text.u32_lt              --------------------------
+	.section	.text.u32_lt,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u32_lt
+        .type           u32_lt,@function
+        .size           u32_lt,(.L_x_14 - u32_lt)
+        .other          u32_lt,@"STO_CUDA_ENTRY STV_DEFAULT"
+u32_lt:
+.text.u32_lt:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   HFMA2.MMA R5, -RZ, RZ, 0, 2.384185791015625e-07 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.CONSTANT R5, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GE.U32.AND P0, PT, R2, R5, PT ;
+        /*00d0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00e0*/                   STG.E.U8 [R6.64], R9 ;
+        /*00f0*/                   EXIT ;
+.L_x_0:
+        /*0100*/                   BRA `(.L_x_0);
+        /*0110*/                   NOP;
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_14:
+
+
+//--------------------- .text.s32_lt              --------------------------
+	.section	.text.s32_lt,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s32_lt
+        .type           s32_lt,@function
+        .size           s32_lt,(.L_x_15 - s32_lt)
+        .other          s32_lt,@"STO_CUDA_ENTRY STV_DEFAULT"
+s32_lt:
+.text.s32_lt:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   HFMA2.MMA R5, -RZ, RZ, 0, 2.384185791015625e-07 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.CONSTANT R5, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GE.AND P0, PT, R2, R5, PT ;
+        /*00d0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00e0*/                   STG.E.U8 [R6.64], R9 ;
+        /*00f0*/                   EXIT ;
+.L_x_1:
+        /*0100*/                   BRA `(.L_x_1);
+        /*0110*/                   NOP;
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_15:
+
+
+//--------------------- .text.u64_ne              --------------------------
+	.section	.text.u64_ne,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u64_ne
+        .type           u64_ne,@function
+        .size           u64_ne,(.L_x_16 - u64_ne)
+        .other          u64_ne,@"STO_CUDA_ENTRY STV_DEFAULT"
+u64_ne:
+.text.u64_ne:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.NE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.NE.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, !P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_2:
+        /*0110*/                   BRA `(.L_x_2);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_16:
+
+
+//--------------------- .text.u64_eq              --------------------------
+	.section	.text.u64_eq,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u64_eq
+        .type           u64_eq,@function
+        .size           u64_eq,(.L_x_17 - u64_eq)
+        .other          u64_eq,@"STO_CUDA_ENTRY STV_DEFAULT"
+u64_eq:
+.text.u64_eq:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.NE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.NE.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_3:
+        /*0110*/                   BRA `(.L_x_3);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_17:
+
+
+//--------------------- .text.u64_ge              --------------------------
+	.section	.text.u64_ge,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u64_ge
+        .type           u64_ge,@function
+        .size           u64_ge,(.L_x_18 - u64_ge)
+        .other          u64_ge,@"STO_CUDA_ENTRY STV_DEFAULT"
+u64_ge:
+.text.u64_ge:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GE.U32.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, !P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_4:
+        /*0110*/                   BRA `(.L_x_4);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_18:
+
+
+//--------------------- .text.u64_gt              --------------------------
+	.section	.text.u64_gt,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u64_gt
+        .type           u64_gt,@function
+        .size           u64_gt,(.L_x_19 - u64_gt)
+        .other          u64_gt,@"STO_CUDA_ENTRY STV_DEFAULT"
+u64_gt:
+.text.u64_gt:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GT.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GT.U32.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, !P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_5:
+        /*0110*/                   BRA `(.L_x_5);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_19:
+
+
+//--------------------- .text.u64_le              --------------------------
+	.section	.text.u64_le,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u64_le
+        .type           u64_le,@function
+        .size           u64_le,(.L_x_20 - u64_le)
+        .other          u64_le,@"STO_CUDA_ENTRY STV_DEFAULT"
+u64_le:
+.text.u64_le:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GT.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GT.U32.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_6:
+        /*0110*/                   BRA `(.L_x_6);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_20:
+
+
+//--------------------- .text.u64_lt              --------------------------
+	.section	.text.u64_lt,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         u64_lt
+        .type           u64_lt,@function
+        .size           u64_lt,(.L_x_21 - u64_lt)
+        .other          u64_lt,@"STO_CUDA_ENTRY STV_DEFAULT"
+u64_lt:
+.text.u64_lt:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GE.U32.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_7:
+        /*0110*/                   BRA `(.L_x_7);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_21:
+
+
+//--------------------- .text.s64_ne              --------------------------
+	.section	.text.s64_ne,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s64_ne
+        .type           s64_ne,@function
+        .size           s64_ne,(.L_x_22 - s64_ne)
+        .other          s64_ne,@"STO_CUDA_ENTRY STV_DEFAULT"
+s64_ne:
+.text.s64_ne:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.NE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.NE.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, !P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_8:
+        /*0110*/                   BRA `(.L_x_8);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_22:
+
+
+//--------------------- .text.s64_eq              --------------------------
+	.section	.text.s64_eq,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s64_eq
+        .type           s64_eq,@function
+        .size           s64_eq,(.L_x_23 - s64_eq)
+        .other          s64_eq,@"STO_CUDA_ENTRY STV_DEFAULT"
+s64_eq:
+.text.s64_eq:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.NE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.NE.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_9:
+        /*0110*/                   BRA `(.L_x_9);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_23:
+
+
+//--------------------- .text.s64_ge              --------------------------
+	.section	.text.s64_ge,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s64_ge
+        .type           s64_ge,@function
+        .size           s64_ge,(.L_x_24 - s64_ge)
+        .other          s64_ge,@"STO_CUDA_ENTRY STV_DEFAULT"
+s64_ge:
+.text.s64_ge:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GE.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, !P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_10:
+        /*0110*/                   BRA `(.L_x_10);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_24:
+
+
+//--------------------- .text.s64_gt              --------------------------
+	.section	.text.s64_gt,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s64_gt
+        .type           s64_gt,@function
+        .size           s64_gt,(.L_x_25 - s64_gt)
+        .other          s64_gt,@"STO_CUDA_ENTRY STV_DEFAULT"
+s64_gt:
+.text.s64_gt:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GT.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GT.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, !P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_11:
+        /*0110*/                   BRA `(.L_x_11);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_25:
+
+
+//--------------------- .text.s64_le              --------------------------
+	.section	.text.s64_le,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s64_le
+        .type           s64_le,@function
+        .size           s64_le,(.L_x_26 - s64_le)
+        .other          s64_le,@"STO_CUDA_ENTRY STV_DEFAULT"
+s64_le:
+.text.s64_le:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GT.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GT.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_12:
+        /*0110*/                   BRA `(.L_x_12);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_26:
+
+
+//--------------------- .text.s64_lt              --------------------------
+	.section	.text.s64_lt,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+        .global         s64_lt
+        .type           s64_lt,@function
+        .size           s64_lt,(.L_x_27 - s64_lt)
+        .other          s64_lt,@"STO_CUDA_ENTRY STV_DEFAULT"
+s64_lt:
+.text.s64_lt:
+        /*0000*/                   IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] ;
+        /*0010*/                   S2R R0, SR_CTAID.X ;
+        /*0020*/                   IMAD.MOV.U32 R5, RZ, RZ, 0x8 ;
+        /*0030*/                   ULDC.64 UR4, c[0x0][0x118] ;
+        /*0040*/                   S2R R3, SR_TID.X ;
+        /*0050*/                   IMAD R0, R0, c[0x0][0x0], R3 ;
+        /*0060*/                   IMAD.WIDE R2, R0, R5, c[0x0][0x160] ;
+        /*0070*/                   IMAD.WIDE R4, R0.reuse, R5, c[0x0][0x168] ;
+        /*0080*/                   LDG.E.64.CONSTANT R2, [R2.64] ;
+        /*0090*/                   LDG.E.64.CONSTANT R4, [R4.64] ;
+        /*00a0*/                   IADD3 R6, P1, R0, c[0x0][0x170], RZ ;
+        /*00b0*/                   LEA.HI.X.SX32 R7, R0, c[0x0][0x174], 0x1, P1 ;
+        /*00c0*/                   ISETP.GE.U32.AND P0, PT, R2, R4, PT ;
+        /*00d0*/                   ISETP.GE.AND.EX P0, PT, R3, R5, PT, P0 ;
+        /*00e0*/                   SEL R9, RZ, 0x1, P0 ;
+        /*00f0*/                   STG.E.U8 [R6.64], R9 ;
+        /*0100*/                   EXIT ;
+.L_x_13:
+        /*0110*/                   BRA `(.L_x_13);
+        /*0120*/                   NOP;
+        /*0130*/                   NOP;
+        /*0140*/                   NOP;
+        /*0150*/                   NOP;
+        /*0160*/                   NOP;
+        /*0170*/                   NOP;
+        /*0180*/                   NOP;
+        /*0190*/                   NOP;
+        /*01a0*/                   NOP;
+        /*01b0*/                   NOP;
+        /*01c0*/                   NOP;
+        /*01d0*/                   NOP;
+        /*01e0*/                   NOP;
+        /*01f0*/                   NOP;
+.L_x_27:
