@@ -1,5 +1,5 @@
 NVCC   := nvcc
-SM     ?= 90
+SM     ?= 100
 ARCH   := sm_$(SM)
 
 NAME   := integer_sat
