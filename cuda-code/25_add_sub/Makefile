@@ -1,5 +1,5 @@
 NVCC   := nvcc
-SM     ?= 90
+SM     ?= 100a
 ARCH   := sm_$(SM)
 
 NAME   := addsub

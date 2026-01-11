@@ -2,7 +2,7 @@ NVCC   := nvcc
 SM     ?= 100a
 ARCH   := sm_$(SM)
 
-NAME   := minmax_f16_f16x2
+NAME   := mul
 SRC    := $(NAME).cu
 
 BASE   := $(NAME)_$(ARCH)
