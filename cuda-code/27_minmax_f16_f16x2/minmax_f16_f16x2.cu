@@ -7,18 +7,17 @@
 #include <cuda_fp16.h>
 #include <cuda_runtime.h>
 
-        // /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                /* 0x0000000209047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                /* 0x0000000209067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2 R5, R2.H0_H0, R5.H0_H0, PT ;        /* 0x2000000502057240 */
-        // /* 0x008fca0003800800 */
-        // /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;           /* 0x0000000506007986 */
-        // /* 0x000fe2000c101504 */
+//         /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
+//                                                                               /* 0x002ea2000c1e9500 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                /* 0x0000000209047825 */
+//                                                                               /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
+//                                                                               /* 0x000ea2000c1e9500 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                /* 0x0000000209067825 */
+//                                                                               /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2 R5, R2.H0_H0, R5.H0_H0, PT ;        /* 0x2000000502057240 */
+//                                                                               /* 0x004fca0003800800 */
+//         /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;           /* 0x0000000506007986 */
 __device__ __forceinline__ __half min_f16(__half a, __half b) {
     __half_raw ar = static_cast<__half_raw>(a);
     __half_raw br = static_cast<__half_raw>(b);
@@ -27,18 +26,17 @@ __device__ __forceinline__ __half min_f16(__half a, __half b) {
     return __half(out);
 }
 
-        // /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                /* 0x0000000209047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                /* 0x0000000209067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2 R5, R2.H0_H0, R5.H0_H0, !PT ;       /* 0x2000000502057240 */
-        // /* 0x008fca0007800800 */
-        // /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;           /* 0x0000000506007986 */
-        // /* 0x000fe2000c101504 */
+//         /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
+//                                                                               /* 0x002ea2000c1e9500 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                /* 0x0000000209047825 */
+//                                                                               /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
+//                                                                               /* 0x000ea2000c1e9500 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                /* 0x0000000209067825 */
+//                                                                               /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2 R5, R2.H0_H0, R5.H0_H0, !PT ;       /* 0x2000000502057240 */
+//                                                                               /* 0x004fca0007800800 */
+//         /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;           /* 0x0000000506007986 */
 __device__ __forceinline__ __half max_f16(__half a, __half b) {
     __half_raw ar = static_cast<__half_raw>(a);
     __half_raw br = static_cast<__half_raw>(b);
@@ -47,18 +45,17 @@ __device__ __forceinline__ __half max_f16(__half a, __half b) {
     return __half(out);
 }
 
-        // /*00a0*/                   LDG.E.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;            /* 0x0000000409047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;            /* 0x0000000409067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2 R9, R2, R5, PT ;                /* 0x0000000502097240 */
-        // /* 0x008fca0003800000 */
-        // /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;           /* 0x0000000906007986 */
-        // /* 0x000fe2000c101904 */
+//         /*00a0*/                   LDG.E R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
+//                                                                  /* 0x002ea2000c1e1900 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;   /* 0x0000000409047825 */
+//                                                                  /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
+//                                                                  /* 0x000ea2000c1e1900 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;   /* 0x0000000409067825 */
+//                                                                  /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2 R9, R2, R5, PT ;       /* 0x0000000502097240 */
+//                                                                  /* 0x004fca0003800000 */
+//         /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;  /* 0x0000000906007986 */
 __device__ __forceinline__ uint32_t min_f16x2(__half2 a, __half2 b) {
     __half2_raw ar = static_cast<__half2_raw>(a);
     __half2_raw br = static_cast<__half2_raw>(b);
@@ -69,18 +66,17 @@ __device__ __forceinline__ uint32_t min_f16x2(__half2 a, __half2 b) {
     return out_bits;
 }
 
-        // /*00a0*/                   LDG.E.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;            /* 0x0000000409047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;            /* 0x0000000409067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2 R9, R2, R5, !PT ;               /* 0x0000000502097240 */
-        // /* 0x008fca0007800000 */
-        // /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;           /* 0x0000000906007986 */
-        // /* 0x000fe2000c101904 */
+//         /*00a0*/                   LDG.E R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
+//                                                                  /* 0x002ea2000c1e1900 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;   /* 0x0000000409047825 */
+//                                                                  /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
+//                                                                  /* 0x000ea2000c1e1900 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;   /* 0x0000000409067825 */
+//                                                                  /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2 R9, R2, R5, !PT ;      /* 0x0000000502097240 */
+//                                                                  /* 0x004fca0007800000 */
+//         /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;  /* 0x0000000906007986 */
 __device__ __forceinline__ uint32_t max_f16x2(__half2 a, __half2 b) {
     __half2_raw ar = static_cast<__half2_raw>(a);
     __half2_raw br = static_cast<__half2_raw>(b);
@@ -91,18 +87,17 @@ __device__ __forceinline__ uint32_t max_f16x2(__half2 a, __half2 b) {
     return out_bits;
 }
 
-        // /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;    /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                  /* 0x0000000209047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;    /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                  /* 0x0000000209067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2.BF16_V2 R5, R2.H0_H0, R5.H0_H0, PT ;  /* 0x2000000502057240 */
-        // /* 0x008fca0003a00800 */
-        // /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;             /* 0x0000000506007986 */
-        // /* 0x000fe2000c101504 */
+//         /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;    /* 0x0000000402027981 */
+//                                                                                 /* 0x002ea2000c1e9500 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                  /* 0x0000000209047825 */
+//                                                                                 /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;    /* 0x0000000404057981 */
+//                                                                                 /* 0x000ea2000c1e9500 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                  /* 0x0000000209067825 */
+//                                                                                 /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2.BF16_V2 R5, R2.H0_H0, R5.H0_H0, PT ;  /* 0x2000000502057240 */
+//                                                                                 /* 0x004fca0003a00800 */
+//         /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;             /* 0x0000000506007986 */
 __device__ __forceinline__ __nv_bfloat16 min_bf16(__nv_bfloat16 a, __nv_bfloat16 b) {
     __nv_bfloat16_raw ar = static_cast<__nv_bfloat16_raw>(a);
     __nv_bfloat16_raw br = static_cast<__nv_bfloat16_raw>(b);
@@ -111,18 +106,17 @@ __device__ __forceinline__ __nv_bfloat16 min_bf16(__nv_bfloat16 a, __nv_bfloat16
     return __nv_bfloat16(out);
 }
 
-        // /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;     /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                   /* 0x0000000209047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;     /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9500 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                   /* 0x0000000209067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2.BF16_V2 R5, R2.H0_H0, R5.H0_H0, !PT ;  /* 0x2000000502057240 */
-        // /* 0x008fca0007a00800 */
-        // /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;              /* 0x0000000506007986 */
-        // /* 0x000fe2000c101504 */
+//         /*00a0*/                   LDG.E.U16.CONSTANT R2, desc[UR4][R2.64] ;     /* 0x0000000402027981 */
+//                                                                                  /* 0x002ea2000c1e9500 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x2, R4 ;                   /* 0x0000000209047825 */
+//                                                                                  /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E.U16.CONSTANT R5, desc[UR4][R4.64] ;     /* 0x0000000404057981 */
+//                                                                                  /* 0x000ea2000c1e9500 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x2, R6 ;                   /* 0x0000000209067825 */
+//                                                                                  /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2.BF16_V2 R5, R2.H0_H0, R5.H0_H0, !PT ;  /* 0x2000000502057240 */
+//                                                                                  /* 0x004fca0007a00800 */
+//         /*00f0*/                   STG.E.U16 desc[UR4][R6.64], R5 ;              /* 0x0000000506007986 */
 __device__ __forceinline__ __nv_bfloat16 max_bf16(__nv_bfloat16 a, __nv_bfloat16 b) {
     __nv_bfloat16_raw ar = static_cast<__nv_bfloat16_raw>(a);
     __nv_bfloat16_raw br = static_cast<__nv_bfloat16_raw>(b);
@@ -131,18 +125,17 @@ __device__ __forceinline__ __nv_bfloat16 max_bf16(__nv_bfloat16 a, __nv_bfloat16
     return __nv_bfloat16(out);
 }
 
-        // /*00a0*/                   LDG.E.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;            /* 0x0000000409047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;            /* 0x0000000409067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2.BF16_V2 R9, R2, R5, PT ;        /* 0x0000000502097240 */
-        // /* 0x008fca0003a00000 */
-        // /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;           /* 0x0000000906007986 */
-        // /* 0x000fe2000c101904 */
+//         /*00a0*/                   LDG.E R2, desc[UR4][R2.64] ;     /* 0x0000000402027981 */
+//                                                                     /* 0x002ea2000c1e1900 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;      /* 0x0000000409047825 */
+//                                                                     /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E R5, desc[UR4][R4.64] ;     /* 0x0000000404057981 */
+//                                                                     /* 0x000ea2000c1e1900 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;      /* 0x0000000409067825 */
+//                                                                     /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2.BF16_V2 R9, R2, R5, PT ;  /* 0x0000000502097240 */
+//                                                                     /* 0x004fca0003a00000 */
+//         /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;     /* 0x0000000906007986 */
 __device__ __forceinline__ uint32_t min_bf16x2(__nv_bfloat162 a, __nv_bfloat162 b) {
     __nv_bfloat162_raw ar = static_cast<__nv_bfloat162_raw>(a);
     __nv_bfloat162_raw br = static_cast<__nv_bfloat162_raw>(b);
@@ -153,18 +146,17 @@ __device__ __forceinline__ uint32_t min_bf16x2(__nv_bfloat162 a, __nv_bfloat162 
     return out_bits;
 }
 
-        // /*00a0*/                   LDG.E.CONSTANT R2, desc[UR4][R2.64] ;  /* 0x0000000402027981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;            /* 0x0000000409047825 */
-        // /* 0x004fcc00078e0204 */
-        // /*00c0*/                   LDG.E.CONSTANT R5, desc[UR4][R4.64] ;  /* 0x0000000404057981 */
-        // /* 0x000ee2000c1e9900 */
-        // /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;            /* 0x0000000409067825 */
-        // /* 0x001fe200078e0206 */
-        // /*00e0*/                   HMNMX2.BF16_V2 R9, R2, R5, !PT ;       /* 0x0000000502097240 */
-        // /* 0x008fca0007a00000 */
-        // /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;           /* 0x0000000906007986 */
-        // /* 0x000fe2000c101904 */
+//         /*00a0*/                   LDG.E R2, desc[UR4][R2.64] ;      /* 0x0000000402027981 */
+//                                                                      /* 0x002ea2000c1e1900 */
+//         /*00b0*/                   IMAD.WIDE R4, R9, 0x4, R4 ;       /* 0x0000000409047825 */
+//                                                                      /* 0x008fcc00078e0204 */
+//         /*00c0*/                   LDG.E R5, desc[UR4][R4.64] ;      /* 0x0000000404057981 */
+//                                                                      /* 0x000ea2000c1e1900 */
+//         /*00d0*/                   IMAD.WIDE R6, R9, 0x4, R6 ;       /* 0x0000000409067825 */
+//                                                                      /* 0x001fe200078e0206 */
+//         /*00e0*/                   HMNMX2.BF16_V2 R9, R2, R5, !PT ;  /* 0x0000000502097240 */
+//                                                                      /* 0x004fca0007a00000 */
+//         /*00f0*/                   STG.E desc[UR4][R6.64], R9 ;      /* 0x0000000906007986 */
 __device__ __forceinline__ uint32_t max_bf16x2(__nv_bfloat162 a, __nv_bfloat162 b) {
     __nv_bfloat162_raw ar = static_cast<__nv_bfloat162_raw>(a);
     __nv_bfloat162_raw br = static_cast<__nv_bfloat162_raw>(b);

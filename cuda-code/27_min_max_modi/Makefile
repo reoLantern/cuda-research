@@ -1,5 +1,5 @@
 NVCC   := nvcc
-SM     ?= 100
+SM     ?= 103a
 ARCH   := sm_$(SM)
 
 NAME   := minmax_modi

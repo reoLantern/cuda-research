@@ -1,5 +1,5 @@
 NVCC   := nvcc
-SM     ?= 100a
+SM     ?= 103a
 ARCH   := sm_$(SM)
 
 NAME   := minmax_f16_f16x2
