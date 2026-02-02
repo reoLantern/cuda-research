@@ -5,59 +5,89 @@ Disassembly of section .text:
 
 0000000000001900 <simt_stack_kernel>:
 	s_clause 0x1                                               // 000000001900: BF850001
-	s_load_b32 s2, s[0:1], 0x24                                // 000000001904: F4000080 F8000024
-	s_load_b32 s3, s[0:1], 0x10                                // 00000000190C: F40000C0 F8000010
+// kernarg: n (未使用，因去掉了 gid>=n 判断)
+	s_load_b32 s4, s[0:1], 0x24                                // 000000001904: F4000100 F8000024
+// kernarg: base pointers a/b
+	s_load_b128 s[0:3], s[0:1], 0x0                            // 00000000190C: F4004000 F8000000
 	s_wait_kmcnt 0x0                                           // 000000001914: BFC70000
-	s_and_b32 s2, s2, 0xffff                                   // 000000001918: 8B02FF02 0000FFFF
-	s_delay_alu instid0(SALU_CYCLE_1)                          // 000000001920: BF870009
-	v_mad_co_u64_u32 v[0:1], null, ttmp9, s2, v[0:1]           // 000000001924: D6FE7C00 04000475
-	s_mov_b32 s2, exec_lo                                      // 00000000192C: BE82007E
-	v_cmpx_gt_i32_e64 s3, v0                                   // 000000001930: D4C4007E 00020003
-	s_cbranch_execz 57                                         // 000000001938: BFA50039 <simt_stack_kernel+0x120>
-	s_load_b128 s[0:3], s[0:1], 0x0                            // 00000000193C: F4004000 F8000000
-	v_ashrrev_i32_e32 v1, 31, v0                               // 000000001944: 3402009F
-	s_delay_alu instid0(VALU_DEP_1) | instskip(SKIP_1) | instid1(VALU_DEP_1)// 000000001948: BF8700A1
-	v_lshlrev_b64_e32 v[0:1], 2, v[0:1]                        // 00000000194C: 3E000082
-	s_wait_kmcnt 0x0                                           // 000000001950: BFC70000
-	v_add_co_u32 v2, vcc_lo, s0, v0                            // 000000001954: D7006A02 00020000
-	s_delay_alu instid0(VALU_DEP_1)                            // 00000000195C: BF870001
-	v_add_co_ci_u32_e64 v3, null, s1, v1, vcc_lo               // 000000001960: D5207C03 01AA0201
-	v_add_co_u32 v0, vcc_lo, s2, v0                            // 000000001968: D7006A00 00020002
-	s_wait_alu 0xfffd                                          // 000000001970: BF88FFFD
-	v_add_co_ci_u32_e64 v1, null, s3, v1, vcc_lo               // 000000001974: D5207C01 01AA0203
-	global_load_b32 v3, v[2:3], off                            // 00000000197C: EE05007C 00000003 00000002
-	s_mov_b32 s1, 0                                            // 000000001988: BE810080
-	global_load_b32 v2, v[0:1], off                            // 00000000198C: EE05007C 00000002 00000000
-	s_wait_loadcnt 0x1                                         // 000000001998: BFC00001
-	v_lshlrev_b32_e32 v4, 1, v3                                // 00000000199C: 30080681
-	v_cmp_lt_i32_e32 vcc_lo, 0, v3                             // 0000000019A0: 7C820680
-	s_wait_loadcnt 0x0                                         // 0000000019A4: BFC00000
-	s_delay_alu instid0(VALU_DEP_2)                            // 0000000019A8: BF870002
-	v_cmp_gt_i32_e64 s0, v2, v4                                // 0000000019AC: D4440000 00020902
-	s_and_b32 s0, vcc_lo, s0                                   // 0000000019B4: 8B00006A
-	s_wait_alu 0xfffe                                          // 0000000019B8: BF88FFFE
-	s_and_b32 exec_lo, exec_lo, s0                             // 0000000019BC: 8B7E007E
-	s_cbranch_execz 23                                         // 0000000019C0: BFA50017 <simt_stack_kernel+0x120>
-	v_dual_mov_b32 v5, v2 :: v_dual_add_nc_u32 v4, -2, v4      // 0000000019C4: CA200102 050408C2
-	v_cmp_gt_u32_e32 vcc_lo, 2, v3                             // 0000000019CC: 7C980682
-	s_delay_alu instid0(VALU_DEP_2) | instskip(SKIP_1) | instid1(VALU_DEP_4)// 0000000019D0: BF870222
-	v_cmp_le_i32_e64 s0, v2, v4                                // 0000000019D4: D4430000 00020902
-	v_add_nc_u32_e32 v6, -1, v3                                // 0000000019DC: 4A0C06C1
-	v_add_nc_u32_e32 v5, v5, v3                                // 0000000019E0: 4A0A0705
-	v_add_nc_u32_e32 v4, -2, v4                                // 0000000019E4: 4A0808C2
-	s_or_b32 s0, vcc_lo, s0                                    // 0000000019E8: 8C00006A
-	s_delay_alu instid0(VALU_DEP_3)                            // 0000000019EC: BF870003
-	v_mov_b32_e32 v3, v6                                       // 0000000019F0: 7E060306
-	s_wait_alu 0xfffe                                          // 0000000019F4: BF88FFFE
-	s_and_b32 s0, exec_lo, s0                                  // 0000000019F8: 8B00007E
-	s_wait_alu 0xfffe                                          // 0000000019FC: BF88FFFE
-	s_or_b32 s1, s0, s1                                        // 000000001A00: 8C010100
-	s_wait_alu 0xfffe                                          // 000000001A04: BF88FFFE
-	s_and_not1_b32 exec_lo, exec_lo, s1                        // 000000001A08: 917E017E
-	s_cbranch_execnz 65519                                     // 000000001A0C: BFA6FFEF <simt_stack_kernel+0xcc>
-	s_or_b32 exec_lo, exec_lo, s1                              // 000000001A10: 8C7E017E
-	global_store_b32 v[0:1], v5, off                           // 000000001A14: EE06807C 02800000 00000000
-	s_endpgm                                                   // 000000001A20: BFB00000
+	s_and_b32 s4, s4, 0xffff                                   // 000000001918: 8B04FF04 0000FFFF
+	s_delay_alu instid0(SALU_CYCLE_1) | instskip(NEXT) | instid1(VALU_DEP_1)// 000000001920: BF870099
+// gid = blockIdx.x * blockDim.x + threadIdx.x
+	v_mad_co_u64_u32 v[0:1], null, ttmp9, s4, v[0:1]           // 000000001924: D6FE7C00 04000875
+	v_ashrrev_i32_e32 v1, 31, v0                               // 00000000192C: 3402009F
+	s_delay_alu instid0(VALU_DEP_1) | instskip(NEXT) | instid1(VALU_DEP_1)// 000000001930: BF870091
+// byte offset = gid * 4
+	v_lshlrev_b64_e32 v[0:1], 2, v[0:1]                        // 000000001934: 3E000082
+// addr_a = a + gid*4
+	v_add_co_u32 v2, vcc_lo, s0, v0                            // 000000001938: D7006A02 00020000
+	s_delay_alu instid0(VALU_DEP_1)                            // 000000001940: BF870001
+	v_add_co_ci_u32_e64 v3, null, s1, v1, vcc_lo               // 000000001944: D5207C03 01AA0201
+// addr_b = b + gid*4
+	v_add_co_u32 v0, vcc_lo, s2, v0                            // 00000000194C: D7006A00 00020002
+	s_wait_alu 0xfffd                                          // 000000001954: BF88FFFD
+	v_add_co_ci_u32_e64 v1, null, s3, v1, vcc_lo               // 000000001958: D5207C01 01AA0203
+// i = a[gid]
+	global_load_b32 v3, v[2:3], off                            // 000000001960: EE05007C 00000003 00000002
+// exitMask = 0 (用于 break 的 lane 集合)
+	s_mov_b32 s1, 0                                            // 00000000196C: BE810080
+// j = b[gid]
+	global_load_b32 v2, v[0:1], off                            // 000000001970: EE05007C 00000002 00000000
+	s_wait_loadcnt 0x1                                         // 00000000197C: BFC00001
+// 2*i
+	v_lshlrev_b32_e32 v4, 1, v3                                // 000000001980: 30080681
+// i > 0
+	v_cmp_lt_i32_e32 vcc_lo, 0, v3                             // 000000001984: 7C820680
+	s_wait_loadcnt 0x0                                         // 000000001988: BFC00000
+	s_delay_alu instid0(VALU_DEP_2)                            // 00000000198C: BF870002
+// j > 2*i
+	v_cmp_gt_i32_e64 s0, v2, v4                                // 000000001990: D4440000 00020902
+// cond = (i>0 && j>2*i)
+	s_and_b32 s0, vcc_lo, s0                                   // 000000001998: 8B00006A
+	s_wait_alu 0xfffe                                          // 00000000199C: BF88FFFE
+// exec &= cond (进入 loop body), 并保存旧 exec 到 s2
+	s_and_saveexec_b32 s2, s0                                  // 0000000019A0: BE822000
+// 若 exec==0，则无活跃 lane，跳出 loop
+	s_cbranch_execz 23                                         // 0000000019A4: BFA50017 <simt_stack_kernel+0x104>
+// v5=j; v4=2*i-2 (为下一轮准备 2*(i-1))
+	v_dual_mov_b32 v5, v2 :: v_dual_add_nc_u32 v4, -2, v4      // 0000000019A8: CA200102 050408C2
+// i < 2 ? (用于构造 break 条件)
+	v_cmp_gt_u32_e32 vcc_lo, 2, v3                             // 0000000019B0: 7C980682
+	s_delay_alu instid0(VALU_DEP_2) | instskip(SKIP_1) | instid1(VALU_DEP_4)// 0000000019B4: BF870222
+// j <= 2*(i-1) ? (用于构造 break 条件)
+	v_cmp_le_i32_e64 s0, v2, v4                                // 0000000019B8: D4430000 00020902
+// i = i - 1
+	v_add_nc_u32_e32 v6, -1, v3                                // 0000000019C0: 4A0C06C1
+// b[gid] += i
+	v_add_nc_u32_e32 v5, v5, v3                                // 0000000019C4: 4A0A0705
+	v_add_nc_u32_e32 v4, -2, v4                                // 0000000019C8: 4A0808C2
+// breakCond = (i<2) || (j <= 2*(i-1))
+	s_or_b32 s0, vcc_lo, s0                                    // 0000000019CC: 8C00006A
+	s_delay_alu instid0(VALU_DEP_3)                            // 0000000019D0: BF870003
+// i 更新为 i-1
+	v_mov_b32_e32 v3, v6                                       // 0000000019D4: 7E060306
+	s_wait_alu 0xfffe                                          // 0000000019D8: BF88FFFE
+// 只保留当前活跃 lane 的 breakCond
+	s_and_b32 s0, exec_lo, s0                                  // 0000000019DC: 8B00007E
+	s_wait_alu 0xfffe                                          // 0000000019E0: BF88FFFE
+// exitMask |= breakCond
+	s_or_b32 s1, s0, s1                                        // 0000000019E4: 8C010100
+	s_wait_alu 0xfffe                                          // 0000000019E8: BF88FFFE
+// exec &= ~exitMask (break 的 lane 退出循环)
+	s_and_not1_b32 exec_lo, exec_lo, s1                        // 0000000019EC: 917E017E
+// 仍有活跃 lane -> 回到 loop 头
+	s_cbranch_execnz 65519                                     // 0000000019F0: BFA6FFEF <simt_stack_kernel+0xb0>
+// loop 结束，恢复 exec 以便写回
+	s_or_b32 exec_lo, exec_lo, s1                              // 0000000019F4: 8C7E017E
+// store b[gid]
+	global_store_b32 v[0:1], v5, off                           // 0000000019F8: EE06807C 02800000 00000000
+	s_endpgm                                                   // 000000001A04: BFB00000
+	s_code_end                                                 // 000000001A08: BF9F0000
+	s_code_end                                                 // 000000001A0C: BF9F0000
+	s_code_end                                                 // 000000001A10: BF9F0000
+	s_code_end                                                 // 000000001A14: BF9F0000
+	s_code_end                                                 // 000000001A18: BF9F0000
+	s_code_end                                                 // 000000001A1C: BF9F0000
+	s_code_end                                                 // 000000001A20: BF9F0000
 	s_code_end                                                 // 000000001A24: BF9F0000
 	s_code_end                                                 // 000000001A28: BF9F0000
 	s_code_end                                                 // 000000001A2C: BF9F0000

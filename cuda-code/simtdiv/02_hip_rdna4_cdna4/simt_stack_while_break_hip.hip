@@ -4,9 +4,6 @@ extern "C" __global__ __attribute__((used)) void simt_stack_kernel(const int *a,
                                                                     int *b,
                                                                     int n) {
   int gid = blockIdx.x * blockDim.x + threadIdx.x;
-  if (gid >= n) {
-    return;
-  }
 
   int i = a[gid];
   int j = b[gid];
