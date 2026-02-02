@@ -3,7 +3,7 @@ TARGET  := warp_ops.out
 SRC     := warp_ops.cu
 
 NVCC    ?= nvcc
-ARCH    ?= sm_80
+ARCH    ?= sm_103a
 COMPUTE := $(subst sm_,compute_,$(ARCH))
 
 # 你可用 make O=0 降低优化，观察更“直”的 PTX/SASS

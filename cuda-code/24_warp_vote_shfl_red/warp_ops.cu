@@ -102,9 +102,10 @@ __device__ __noinline__ void do_reduce(int* out, int seed) {
   int x = ((int)lane + seed) & 15; // 小范围，便于你验证 sum/min/max 等
 
 #if __CUDA_ARCH__ >= 800
-  int s = __reduce_add_sync(m, x);
-  int mn = __reduce_min_sync(m, x);
-  int mx = __reduce_max_sync(m, x);
+  int s, mn, mx;
+  s = __reduce_add_sync(m, x);
+  mn = __reduce_min_sync(m, x);
+  mx = __reduce_max_sync(m, x);
 
   out[OFF_REDUX + (int)lane + 0]  = s;
   out[OFF_REDUX + (int)lane + 32] = mn;
