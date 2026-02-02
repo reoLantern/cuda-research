@@ -36,15 +36,18 @@ Disassembly of section .text:
 // 2*i
 	v_lshlrev_b32_e32 v4, 1, v3                                // 000000001980: 30080681
 // i > 0
+// HIP: while (i > 0) 的第一部分（i > 0）
 	v_cmp_lt_i32_e32 vcc_lo, 0, v3                             // 000000001984: 7C820680
 	s_wait_loadcnt 0x0                                         // 000000001988: BFC00000
 	s_delay_alu instid0(VALU_DEP_2)                            // 00000000198C: BF870002
 // j > 2*i
+// HIP: if (j > 2*i) 条件（为 then/else 分歧做判断）
 	v_cmp_gt_i32_e64 s0, v2, v4                                // 000000001990: D4440000 00020902
 // cond = (i>0 && j>2*i)
 	s_and_b32 s0, vcc_lo, s0                                   // 000000001998: 8B00006A
 	s_wait_alu 0xfffe                                          // 00000000199C: BF88FFFE
 // exec &= cond (进入 loop body), 并保存旧 exec 到 s2
+// SIMT divergence: 根据 (i>0 && j>2*i) 更新 exec，else 分支将退出循环
 	s_and_saveexec_b32 s2, s0                                  // 0000000019A0: BE822000
 // 若 exec==0，则无活跃 lane，跳出 loop
 	s_cbranch_execz 23                                         // 0000000019A4: BFA50017 <simt_stack_kernel+0x104>
@@ -73,8 +76,9 @@ Disassembly of section .text:
 	s_or_b32 s1, s0, s1                                        // 0000000019E4: 8C010100
 	s_wait_alu 0xfffe                                          // 0000000019E8: BF88FFFE
 // exec &= ~exitMask (break 的 lane 退出循环)
+// SIMT divergence: break 的 lanes 从 exec 中移除（退出 loop）
 	s_and_not1_b32 exec_lo, exec_lo, s1                        // 0000000019EC: 917E017E
-// 仍有活跃 lane -> 回到 loop 头
+// SIMT reconvergence: 仍有活跃 lanes -> 回到 loop 头
 	s_cbranch_execnz 65519                                     // 0000000019F0: BFA6FFEF <simt_stack_kernel+0xb0>
 // loop 结束，恢复 exec 以便写回
 	s_or_b32 exec_lo, exec_lo, s1                              // 0000000019F4: 8C7E017E
