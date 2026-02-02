@@ -4,6 +4,7 @@
 
 		Function : _Z17simt_stack_kernelPKiPii
 	.headerflags	@"EF_CUDA_ACCELERATORS EF_CUDA_SM103 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM103)"
+// gid = blockIdx.x * blockDim.x + threadIdx.x
         /*0000*/                   LDC R1, c[0x0][0x37c] ;                 /* 0x0000df00ff017b82 */
                                                                            /* 0x000fe20000000800 */
         /*0010*/                   S2R R0, SR_TID.X ;                      /* 0x0000000000007919 */
@@ -18,44 +19,62 @@
                                                                            /* 0x000eb00000000a00 */
         /*0060*/                   LDC.64 R4, c[0x0][0x388] ;              /* 0x0000e200ff047b82 */
                                                                            /* 0x000ee20000000a00 */
+// gid = blockIdx.x * blockDim.x + threadIdx.x (具体乘加)
         /*0070*/                   IMAD R7, R7, UR6, R0 ;                  /* 0x0000000607077c24 */
                                                                            /* 0x001fc8000f8e0200 */
+// addr_a = a + gid*4
         /*0080*/                   IMAD.WIDE R2, R7, 0x4, R2 ;             /* 0x0000000407027825 */
                                                                            /* 0x004fcc00078e0202 */
+// i = a[gid]
         /*0090*/                   LDG.E R2, desc[UR4][R2.64] ;            /* 0x0000000402027981 */
                                                                            /* 0x002ea2000c1e1900 */
+// addr_b = b + gid*4
         /*00a0*/                   IMAD.WIDE R4, R7, 0x4, R4 ;             /* 0x0000000407047825 */
                                                                            /* 0x008fca00078e0204 */
+// j = b[gid]
         /*00b0*/                   LDG.E R0, desc[UR4][R4.64] ;            /* 0x0000000404007981 */
                                                                            /* 0x000ee2000c1e1900 */
+// 2*i (编译为移位形式；此处是 R7 = R2 << 2)
         /*00c0*/                   IMAD.SHL.U32 R7, R2, 0x2, RZ ;          /* 0x0000000202077824 */
                                                                            /* 0x004fca00078e00ff */
+// if (i <= 0 || j <= 2*i) exit (loop not entered / break on first check)
         /*00d0*/                   ISETP.GT.AND P0, PT, R0, R7, PT ;       /* 0x000000070000720c */
                                                                            /* 0x008fc80003f04270 */
         /*00e0*/                   ISETP.LT.OR P0, PT, R2, 0x1, !P0 ;      /* 0x000000010200780c */
                                                                            /* 0x000fda0004701670 */
         /*00f0*/               @P0 EXIT ;                                  /* 0x000000000000094d */
                                                                            /* 0x000fea0003800000 */
+// BSSY/BSYNC = barrier-style reconvergence (sm103a, RECONVERGENT)
         /*0100*/                   BSSY.RECONVERGENT B0, 0x1a0 ;           /* 0x0000009000007945 */
                                                                            /* 0x000fe20003800200 */
+// tmp = j (b[gid])
         /*0110*/                   IMAD.MOV.U32 R3, RZ, RZ, R0 ;           /* 0x000000ffff037224 */
                                                                            /* 0x000fce00078e0000 */
+// i = i - 1
         /*0120*/                   IADD3 R6, PT, PT, R2.reuse, -0x1, RZ ;  /* 0xffffffff02067810 */
                                                                            /* 0x040fe40007ffe0ff */
+// b[gid] += i
         /*0130*/                   ISETP.GT.U32.AND P1, PT, R2, 0x1, PT ;  /* 0x000000010200780c */
                                                                            /* 0x000fe40003f24070 */
+// b[gid] += i (执行加法)
         /*0140*/                   IADD3 R3, PT, PT, R3, R2, RZ ;          /* 0x0000000203037210 */
                                                                            /* 0x000fe20007ffe0ff */
+// 2*(i-1) (编译为移位形式；此处是 R7 = R6 << 2)
         /*0150*/                   IMAD.SHL.U32 R7, R6, 0x2, RZ ;          /* 0x0000000206077824 */
                                                                            /* 0x000fe200078e00ff */
+// i = i - 1 (commit)
         /*0160*/                   MOV R2, R6 ;                            /* 0x0000000600027202 */
                                                                            /* 0x000fc80000000f00 */
+// loop continue condition: (i > 0) && (j > 2*i)
         /*0170*/                   ISETP.GT.AND P0, PT, R0, R7, PT ;       /* 0x000000070000720c */
                                                                            /* 0x000fda0003f04270 */
+// 分支目标是 0x0120（回到 loop 头部）
         /*0180*/               @P0 BRA P1, 0x120 ;                         /* 0xfffffffc00e40947 */
                                                                            /* 0x000fea000083ffff */
+// BSYNC = reconverge point
         /*0190*/                   BSYNC.RECONVERGENT B0 ;                 /* 0x0000000000007941 */
                                                                            /* 0x000fea0003800200 */
+// b[gid] store
         /*01a0*/                   STG.E desc[UR4][R4.64], R3 ;            /* 0x0000000304007986 */
                                                                            /* 0x000fe2000c101904 */
         /*01b0*/                   EXIT ;                                  /* 0x000000000000794d */

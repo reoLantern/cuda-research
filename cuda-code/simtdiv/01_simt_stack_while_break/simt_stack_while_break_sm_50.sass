@@ -3,6 +3,7 @@
 		Function : _Z17simt_stack_kernelPKiPii
 	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM50 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM50)"
                                                                                  /* 0x001cfc00e22007f6 */
+// gid = blockIdx.x * blockDim.x + threadIdx.x
         /*0008*/                   MOV R1, c[0x0][0x20] ;                        /* 0x4c98078000870001 */
         /*0010*/                   S2R R0, SR_CTAID.X ;                          /* 0xf0c8000002570000 */
         /*0018*/                   S2R R2, SR_TID.X ;                            /* 0xf0c8000002170002 */
@@ -11,35 +12,49 @@
         /*0030*/                   XMAD R2, R0.reuse, c[0x0] [0x8], R2 ;         /* 0x4e00010000270002 */
         /*0038*/                   XMAD.PSL.CBCC R0, R0.H1, R3.H1, R2 ;          /* 0x5b30011800370000 */
                                                                                  /* 0x081fd800fca207f1 */
+// addr_a = a + gid*4; addr_b = b + gid*4
         /*0048*/                   SHL R2, R0.reuse, 0x2 ;                       /* 0x3848000000270002 */
         /*0050*/                   SHR R0, R0, 0x1e ;                            /* 0x3829000001e70000 */
         /*0058*/                   IADD R4.CC, R2.reuse, c[0x0][0x140] ;         /* 0x4c10800005070204 */
                                                                                  /* 0x001ed800fe0207f2 */
         /*0068*/                   IADD.X R5, R0.reuse, c[0x0][0x144] ;          /* 0x4c10080005170005 */
         /*0070*/                   IADD R2.CC, R2, c[0x0][0x148] ;               /* 0x4c10800005270202 */
+// i = a[gid]
         /*0078*/                   LDG.E R4, [R4] ;                              /* 0xeed4200000070404 */
                                                                                  /* 0x041f9800f6a007f2 */
         /*0088*/                   IADD.X R3, R0, c[0x0][0x14c] ;                /* 0x4c10080005370003 */
+// j = b[gid]
         /*0090*/                   LDG.E R6, [R2] ;                              /* 0xeed4200000070206 */
+// 2*i
         /*0098*/                   IADD R0, R4, R4 ;                             /* 0x5c10000000470400 */
                                                                                  /* 0x001ff400fda007ed */
+// if (i <= 0 || j <= 2*i) exit (loop not entered / break on first check)
         /*00a8*/                   ISETP.GT.AND P0, PT, R6, R0, PT ;             /* 0x5b69038000070607 */
         /*00b0*/                   ISETP.LT.OR P0, PT, R4, 0x1, !P0 ;            /* 0x3663240000170407 */
         /*00b8*/               @P0 EXIT ;                                        /* 0xe30000000000000f */
                                                                                  /* 0x081fc400fec007f0 */
+// tmp = j (b[gid]) ; SSY = reconvergence target (SM50 SIMT stack)
         /*00c8*/                   MOV R5, R6 ;                                  /* 0x5c98078000670005 */
         /*00d0*/                   SSY 0x130 ;                                   /* 0xe290000005800000 */
+// i = i - 1
         /*00d8*/                   IADD32I R0, R4.reuse, -0x1 ;                  /* 0x1c0ffffffff70400 */
                                                                                  /* 0x101fc400fe8007f1 */
         /*00e8*/                   ISET.GT.AND RZ.CC, R4, 0x1, PT ;              /* 0x36598380001704ff */
+// b[gid] += i
         /*00f0*/                   IADD R5, R5, R4 ;                             /* 0x5c10000000470505 */
+// 2*(i-1)
         /*00f8*/                   IADD R7, R0, R0.reuse ;                       /* 0x5c10000000070007 */
                                                                                  /* 0x001ff400fda007f5 */
+// i = i - 1 (commit)
         /*0108*/                   MOV R4, R0 ;                                  /* 0x5c98078000070004 */
+// loop continue condition: (i > 0) && (j > 2*i)
         /*0110*/                   ISETP.GT.AND P0, PT, R6, R7, PT ;             /* 0x5b69038000770607 */
+// 分支目标是 0x00d8（回到 loop 头部计算 i-- 与条件）
         /*0118*/               @P0 BRA CC.NEU, 0xd8 ;                            /* 0xe2400ffffb80000d */
                                                                                  /* 0x001f9400fe2007fd */
+// SYNC = reconverge point (SSY target)
         /*0128*/                   SYNC ;                                        /* 0xf0f800000007000f */
+// b[gid] store
         /*0130*/                   STG.E [R2], R5 ;                              /* 0xeedc200000070205 */
         /*0138*/                   NOP ;                                         /* 0x50b0000000070f00 */
                                                                                  /* 0x001f8000ffe007ff */
@@ -51,5 +66,3 @@
         /*0170*/                   NOP;                                          /* 0x50b0000000070f00 */
         /*0178*/                   NOP;                                          /* 0x50b0000000070f00 */
 		..........
-
-
