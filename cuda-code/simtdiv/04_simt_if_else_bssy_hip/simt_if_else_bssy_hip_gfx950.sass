@@ -145,6 +145,16 @@ Disassembly of section .text:
 	v_and_b32_e32 v0, 1, v0                                    // 000000001B68: 26000081
 	// HIP: cond == 1
 	v_cmp_eq_u32_e32 vcc, 1, v0                                // 000000001B6C: 7D940081
+	// --- 分支/exec 关系（伪代码）---
+	// old_exec = exec
+	// then_mask = old_exec & cond
+	// exec = then_mask
+	// if exec==0 -> 跳过 then
+	// else_mask = old_exec ^ then_mask
+	// exec = else_mask          (s_andn2_saveexec)
+	// if exec==0 -> 跳过 else
+	// exec = then_mask | else_mask   (s_or)
+	// -----------------------------
 	// MASK: exec = old_exec & cond (then-path); s[0:1] = old_exec
 	s_and_saveexec_b64 s[0:1], vcc                             // 000000001B70: BE80206A
 	// MASK: s[6:7] = else_mask = old_exec ^ then_mask
@@ -155,9 +165,10 @@ Disassembly of section .text:
 	s_add_u32 s0, s0, 0xfffffd80                               // 000000001B80: 8000FF00 FFFFFD80
 	s_addc_u32 s1, s1, -1                                      // 000000001B88: 8201FF01 FFFFFFFF
 	v_mov_b32_e32 v0, v2                                       // 000000001B90: 7E000302
-	// call then_path(x,y)
+	// call then_path(x,y)  // then 分支执行结束点（返回后仍保持 then_mask）
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001B94: BE9E1E00
-	// MASK: switch exec to else_mask (save current exec internally)
+	// MASK: 切到 else 分支执行：exec = else_mask & ~then_mask
+	//       同时把 then_mask 保存到 s[6:7]（用于最终合流）
 	s_andn2_saveexec_b64 s[6:7], s[6:7]                        // 000000001B98: BE862306
 	// if no lanes in else-path, skip else_path()
 	s_cbranch_execz 7                                          // 000000001B9C: BF880007 <simt_if_else_bssy_kernel+0xbc>
@@ -165,9 +176,9 @@ Disassembly of section .text:
 	s_add_u32 s0, s0, 0xfffffdd4                               // 000000001BA4: 8000FF00 FFFFFDD4
 	s_addc_u32 s1, s1, -1                                      // 000000001BAC: 8201FF01 FFFFFFFF
 	v_mov_b32_e32 v0, v2                                       // 000000001BB4: 7E000302
-	// call else_path(x,y)
+	// call else_path(x,y)  // else 分支执行结束点（返回后仍保持 else_mask）
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001BB8: BE9E1E00
-	// MASK: reconverge exec = then_mask | else_mask
+	// MASK: 合流（reconverge）exec = then_mask | else_mask
 	s_or_b64 exec, exec, s[6:7]                                // 000000001BBC: 87FE067E
 	s_getpc_b64 s[0:1]                                         // 000000001BC0: BE801C00
 	s_add_u32 s0, s0, 0xfffffe2c                               // 000000001BC4: 8000FF00 FFFFFE2C

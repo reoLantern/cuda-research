@@ -137,6 +137,16 @@ Disassembly of section .text:
 	v_and_b32_e32 v0, 1, v0                                    // 000000001B90: 36000081
 	// HIP: cond == 1
 	v_cmp_eq_u32_e32 vcc_lo, 1, v0                             // 000000001B94: 7C940081
+	// --- 分支/exec 关系（伪代码）---
+	// old_exec = exec
+	// then_mask = old_exec & cond
+	// exec = then_mask
+	// if exec==0 -> 跳过 then
+	// else_mask = old_exec ^ then_mask
+	// exec = else_mask          (s_and_not1_saveexec)
+	// if exec==0 -> 跳过 else
+	// exec = then_mask | else_mask   (s_or)
+	// -----------------------------
 	// MASK: exec = old_exec & cond  (then-path lanes); s0 = old_exec
 	s_and_saveexec_b32 s0, vcc_lo                              // 000000001B98: BE80206A
 	s_wait_alu 0xfffe                                          // 000000001B9C: BF88FFFE
@@ -145,40 +155,55 @@ Disassembly of section .text:
 	// if no lanes in then-path, skip then_path()
 	s_cbranch_execz 11                                         // 000000001BA4: BFA5000B <simt_if_else_bssy_kernel+0xd4>
 	v_mov_b32_e32 v0, v2                                       // 000000001BA8: 7E000302
+	// PC 操作：为 then_path 计算目标地址（不是分支切换）
 	s_getpc_b64 s[0:1]                                         // 000000001BAC: BE804700
 	s_wait_alu 0xfffe                                          // 000000001BB0: BF88FFFE
+	// 64-bit PC 计算（高 32 位符号扩展）
 	s_sext_i32_i16 s1, s1                                      // 000000001BB4: BE810F01
+	// PC += 立即数（reloc）=> then_path 入口地址
 	s_add_co_u32 s0, s0, 0xfffffd50                            // 000000001BB8: 8000FF00 FFFFFD50
 	s_wait_alu 0xfffe                                          // 000000001BC0: BF88FFFE
+	// 处理进位，完成 64-bit 加法
 	s_add_co_ci_u32 s1, s1, -1                                 // 000000001BC4: 8201FF01 FFFFFFFF
 	s_wait_alu 0xfffe                                          // 000000001BCC: BF88FFFE
-	// call then_path(x,y)
+	// s_swappc：PC=目标地址；返回地址写入 s[30:31]（call then_path）
+	// then 分支执行结束点（返回后仍保持 then_mask）
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001BD0: BE9E4900
-	// MASK: switch exec to else_mask (save current exec internally)
+	// MASK: 切到 else 分支执行：exec = else_mask & ~then_mask
+	//       同时把 then_mask 保存到 s6（用于最终合流）
 	s_and_not1_saveexec_b32 s6, s6                             // 000000001BD4: BE863006
 	// if no lanes in else-path, skip else_path()
 	s_cbranch_execz 11                                         // 000000001BD8: BFA5000B <simt_if_else_bssy_kernel+0x108>
 	v_mov_b32_e32 v0, v2                                       // 000000001BDC: 7E000302
+	// PC 操作：为 else_path 计算目标地址（不是分支切换）
 	s_getpc_b64 s[0:1]                                         // 000000001BE0: BE804700
 	s_wait_alu 0xfffe                                          // 000000001BE4: BF88FFFE
+	// 64-bit PC 计算（高 32 位符号扩展）
 	s_sext_i32_i16 s1, s1                                      // 000000001BE8: BE810F01
+	// PC += 立即数（reloc）=> else_path 入口地址
 	s_add_co_u32 s0, s0, 0xfffffdd0                            // 000000001BEC: 8000FF00 FFFFFDD0
 	s_wait_alu 0xfffe                                          // 000000001BF4: BF88FFFE
+	// 处理进位，完成 64-bit 加法
 	s_add_co_ci_u32 s1, s1, -1                                 // 000000001BF8: 8201FF01 FFFFFFFF
 	s_wait_alu 0xfffe                                          // 000000001C00: BF88FFFE
-	// call else_path(x,y)
+	// s_swappc：PC=目标地址；返回地址写入 s[30:31]（call else_path）
+	// else 分支执行结束点（返回后仍保持 else_mask）
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001C04: BE9E4900
 	s_wait_alu 0xfffe                                          // 000000001C08: BF88FFFE
-	// MASK: reconverge exec = then_mask | else_mask
+	// MASK: 合流（reconverge）exec = then_mask | else_mask
 	s_or_b32 exec_lo, exec_lo, s6                              // 000000001C0C: 8C7E067E
+	// PC 操作：为 post_mix 计算目标地址（不是分支切换）
 	s_getpc_b64 s[0:1]                                         // 000000001C10: BE804700
 	s_wait_alu 0xfffe                                          // 000000001C14: BF88FFFE
+	// 64-bit PC 计算（高 32 位符号扩展）
 	s_sext_i32_i16 s1, s1                                      // 000000001C18: BE810F01
+	// PC += 立即数（reloc）=> post_mix 入口地址
 	s_add_co_u32 s0, s0, 0xfffffe54                            // 000000001C1C: 8000FF00 FFFFFE54
 	s_wait_alu 0xfffe                                          // 000000001C24: BF88FFFE
+	// 处理进位，完成 64-bit 加法
 	s_add_co_ci_u32 s1, s1, -1                                 // 000000001C28: 8201FF01 FFFFFFFF
 	s_wait_alu 0xfffe                                          // 000000001C30: BF88FFFE
-	// call post_mix(r)
+	// s_swappc：PC=目标地址；返回地址写入 s[30:31]（call post_mix）
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001C34: BE9E4900
 	v_add_co_u32 v1, vcc_lo, s4, v5                            // 000000001C38: D7006A01 00020A04
 	s_wait_alu 0xfffd                                          // 000000001C40: BF88FFFD
