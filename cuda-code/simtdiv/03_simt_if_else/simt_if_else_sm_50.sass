@@ -1,0 +1,44 @@
+
+	code for sm_50
+		Function : _Z19simt_if_else_kernelPKiS0_Pi
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM50 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM50)"
+                                                                                 /* 0x001cfc00e22007f6 */
+        /*0008*/                   MOV R1, c[0x0][0x20] ;                        /* 0x4c98078000870001 */
+        /*0010*/                   S2R R0, SR_CTAID.X ;                          /* 0xf0c8000002570000 */
+        /*0018*/                   S2R R2, SR_TID.X ;                            /* 0xf0c8000002170002 */
+                                                                                 /* 0x001fd842fec20ff1 */
+        /*0028*/                   XMAD.MRG R3, R0.reuse, c[0x0] [0x8].H1, RZ ;  /* 0x4f107f8000270003 */
+        /*0030*/                   XMAD R2, R0.reuse, c[0x0] [0x8], R2 ;         /* 0x4e00010000270002 */
+        /*0038*/                   XMAD.PSL.CBCC R0, R0.H1, R3.H1, R2 ;          /* 0x5b30011800370000 */
+                                                                                 /* 0x081fd800fca207f1 */
+        /*0048*/                   SHL R7, R0.reuse, 0x2 ;                       /* 0x3848000000270007 */
+        /*0050*/                   SHR R8, R0, 0x1e ;                            /* 0x3829000001e70008 */
+        /*0058*/                   IADD R2.CC, R7.reuse, c[0x0][0x140] ;         /* 0x4c10800005070702 */
+                                                                                 /* 0x001fd800f62207f2 */
+        /*0068*/                   IADD.X R3, R8.reuse, c[0x0][0x144] ;          /* 0x4c10080005170803 */
+        /*0070*/                   LDG.E R2, [R2] ;                              /* 0xeed4200000070202 */
+        /*0078*/                   IADD R4.CC, R7, c[0x0][0x148] ;               /* 0x4c10800005270704 */
+                                                                                 /* 0x001fcc00f6a007f2 */
+        /*0088*/                   IADD.X R5, R8, c[0x0][0x14c] ;                /* 0x4c10080005370805 */
+        /*0090*/                   LDG.E R0, [R4] ;                              /* 0xeed4200000070400 */
+        /*0098*/                   DEPBAR.LE SB5, 0x1 ;                          /* 0xf0f0000034170000 */
+                                                                                 /* 0x001fd800fe2007e6 */
+// 计算 (x & 1) 作为 if 条件 (x 为 a[gid])
+        /*00a8*/                   LOP32I.AND R6, R2, 0x1 ;                      /* 0x0400000000170206 */
+// P0 = (x & 1) != 0  // if ((x&1)==0) 的反向谓词
+        /*00b0*/                   ISETP.NE.U32.AND P0, PT, R6, 0x1, PT ;        /* 0x366a038000170607 */
+        /*00b8*/                   IADD R6.CC, R7, c[0x0][0x150] ;               /* 0x4c10800005470706 */
+                                                                                 /* 0x001fc820fec007f7 */
+        /*00c8*/                   IADD.X R7, R8, c[0x0][0x154] ;                /* 0x4c10080005570807 */
+// else 路径: out = x - y (用谓词执行)
+        /*00d0*/              @!P0 IADD R0, -R0, RZ ;                            /* 0x5c1200000ff80000 */
+// then/else 合并: out = x + (±y)
+        /*00d8*/                   IADD R0, R2, R0 ;                             /* 0x5c10000000070200 */
+                                                                                 /* 0x001ffc00ffe007f1 */
+// store out[gid]
+        /*00e8*/                   STG.E [R6], R0 ;                              /* 0xeedc200000070600 */
+        /*00f0*/                   EXIT ;                                        /* 0xe30000000007000f */
+        /*00f8*/                   BRA 0xf8 ;                                    /* 0xe2400fffff87000f */
+		..........
+
+
