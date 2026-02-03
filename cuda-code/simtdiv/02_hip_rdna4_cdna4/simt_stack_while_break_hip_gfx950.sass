@@ -29,17 +29,23 @@ Disassembly of section .text:
 	v_lshlrev_b32_e32 v4, 1, v3                                // 000000001954: 24080681
 // i > 0
 // HIP: while (i > 0) 的第一部分（i > 0）
+// mask op: vcc = (0 < i)  // per-lane predicate for while (i > 0)
 	v_cmp_lt_i32_e32 vcc, 0, v3                                // 000000001958: 7D820680
 	s_waitcnt vmcnt(0)                                         // 00000000195C: BF8C0F70
 // j > 2*i
 // HIP: if (j > 2*i) 条件（为 then/else 分歧做判断）
+// mask op: s[0:1] = (j > 2*i)  // per-lane predicate for if (j > 2*i)
 	v_cmp_gt_i32_e64 s[0:1], v2, v4                            // 000000001960: D0C40000 00020902
 // cond = (i>0 && j>2*i)
+// mask op: s[0:1] = (i>0) & (j>2*i)  // loop-body active mask
 	s_and_b64 s[0:1], vcc, s[0:1]                              // 000000001968: 8680006A
 // exec &= cond (进入 loop body), 并保存旧 exec 到 s[2:3]
 // SIMT divergence: 根据 (i>0 && j>2*i) 更新 exec，else 分支将退出循环
+// mask op: save exec->s[2:3]; exec = exec & s[0:1]  // enter loop body lanes
 	s_and_saveexec_b64 s[2:3], s[0:1]                          // 00000000196C: BE822000
 // 若 exec==0，则无活跃 lane，跳出 loop
+// mask op: branch if exec==0  // no active lanes
+// jump to 0x1970 + 18*4 + 4 = 0x19BC
 	s_cbranch_execz 18                                         // 000000001970: BF880012 <simt_stack_kernel+0xbc>
 // v4=2*i-2 (为下一轮准备 2*(i-1))
 	v_add_u32_e32 v4, -2, v4                                   // 000000001974: 680808C2
@@ -47,29 +53,39 @@ Disassembly of section .text:
 	s_mov_b64 s[2:3], 0                                        // 000000001978: BE820180
 	v_mov_b32_e32 v5, v2                                       // 00000000197C: 7E0A0302
 // i < 2 ? (用于构造 break 条件)
+// mask op: vcc = (2 > i)  // i < 2 (part of breakCond)
 	v_cmp_gt_u32_e32 vcc, 2, v3                                // 000000001980: 7D980682
 // j <= 2*(i-1) ? (用于构造 break 条件)
+// mask op: s[0:1] = (j <= 2*(i-1))  // part of breakCond
 	v_cmp_le_i32_e64 s[0:1], v2, v4                            // 000000001984: D0C30000 00020902
 // breakCond = (i<2) || (j <= 2*(i-1))
+// mask op: s[0:1] = breakCond = (i<2) || (j<=2*(i-1))
 	s_or_b64 s[0:1], vcc, s[0:1]                               // 00000000198C: 8780006A
 // i = i - 1
 	v_add_u32_e32 v6, -1, v3                                   // 000000001990: 680C06C1
 // 只保留当前活跃 lane 的 breakCond
+// mask op: s[0:1] = breakCond &= exec  // only active lanes
 	s_and_b64 s[0:1], exec, s[0:1]                             // 000000001994: 8680007E
 // b[gid] += i
 	v_add_u32_e32 v5, v5, v3                                   // 000000001998: 680A0705
 // v4=2*i-2 (为下一轮准备 2*(i-1))
 	v_add_u32_e32 v4, -2, v4                                   // 00000000199C: 680808C2
 // exitMask |= breakCond
+// mask op: exitMask |= breakCond
 	s_or_b64 s[2:3], s[0:1], s[2:3]                            // 0000000019A0: 87820200
 // i 更新为 i-1
 	v_mov_b32_e32 v3, v6                                       // 0000000019A4: 7E060306
 // exec &= ~exitMask (break 的 lane 退出循环)
 // SIMT divergence: break 的 lanes 从 exec 中移除（退出 loop）
+// mask op: exec &= ~exitMask  // lanes that break leave loop
 	s_andn2_b64 exec, exec, s[2:3]                             // 0000000019A8: 89FE027E
 // SIMT reconvergence: 仍有活跃 lanes -> 回到 loop 头
+// mask op: branch if exec!=0  // loop back if any lane active
+// 65524.i16 = -12
+// jump to 0x19AC - 12*4 + 4 = 0x1980
 	s_cbranch_execnz 65524                                     // 0000000019AC: BF89FFF4 <simt_stack_kernel+0x80>
 // loop 结束，恢复 exec 以便写回
+// mask op: exec |= exitMask  // restore lanes for post-loop store
 	s_or_b64 exec, exec, s[2:3]                                // 0000000019B0: 87FE027E
 // store b[gid]
 	global_store_dword v[0:1], v5, off                         // 0000000019B4: DC708000 007F0500
