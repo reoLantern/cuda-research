@@ -9,7 +9,7 @@ ARCH   := sm_$(SM)
 PTX_ARCH := compute_$(SM)
 GENCODE := -gencode arch=$(PTX_ARCH),code=$(ARCH)
 
-NAME   := simt_nested_bssy
+NAME   := simt_nested_bssy_multi
 SRC    := $(NAME).cu
 
 BASE   := $(NAME)_$(ARCH)
