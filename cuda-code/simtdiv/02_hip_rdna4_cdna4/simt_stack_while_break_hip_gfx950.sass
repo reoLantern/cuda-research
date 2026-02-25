@@ -46,6 +46,8 @@ Disassembly of section .text:
 // 若 exec==0，则无活跃 lane，跳出 loop
 // mask op: branch if exec==0  // no active lanes
 // jump to 0x1970 + 18*4 + 4 = 0x19BC
+// 这个例子比较特殊，只有一个实际分支，另一个分支是退出
+// 所以用 unified execz 进行判断，可见其通常对应 while 等
 	s_cbranch_execz 18                                         // 000000001970: BF880012 <simt_stack_kernel+0xbc>
 // v4=2*i-2 (为下一轮准备 2*(i-1))
 	v_add_u32_e32 v4, -2, v4                                   // 000000001974: 680808C2

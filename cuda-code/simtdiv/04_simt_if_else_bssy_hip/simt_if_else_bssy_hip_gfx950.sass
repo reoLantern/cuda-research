@@ -166,6 +166,7 @@ Disassembly of section .text:
 	s_addc_u32 s1, s1, -1                                      // 000000001B88: 8201FF01 FFFFFFFF
 	v_mov_b32_e32 v0, v2                                       // 000000001B90: 7E000302
 	// call then_path(x,y)  // then 分支执行结束点（返回后仍保持 then_mask）
+// swap pc 就是执行分支切换
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001B94: BE9E1E00
 	// MASK: 切到 else 分支执行：exec = else_mask & ~then_mask
 	//       同时把 then_mask 保存到 s[6:7]（用于最终合流）

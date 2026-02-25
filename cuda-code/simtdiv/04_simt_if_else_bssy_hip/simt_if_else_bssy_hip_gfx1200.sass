@@ -168,6 +168,7 @@ Disassembly of section .text:
 	s_wait_alu 0xfffe                                          // 000000001BCC: BF88FFFE
 	// s_swappc：PC=目标地址；返回地址写入 s[30:31]（call then_path）
 	// then 分支执行结束点（返回后仍保持 then_mask）
+// swap pc 就是执行分支切换
 	s_swappc_b64 s[30:31], s[0:1]                              // 000000001BD0: BE9E4900
 	// MASK: 切到 else 分支执行：exec = else_mask & ~then_mask
 	//       同时把 then_mask 保存到 s6（用于最终合流）

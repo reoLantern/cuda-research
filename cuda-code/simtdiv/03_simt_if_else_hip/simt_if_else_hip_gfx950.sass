@@ -37,6 +37,7 @@ Disassembly of section .text:
 	v_cmp_eq_u32_e32 vcc, 0, v2                                // 000000001988: 7D940480
 	s_nop 1                                                    // 00000000198C: BF800001
 	// HIP: select y or -y without control divergence
+// 类似 NVIDIA 用 predicate 做选择
 	v_cndmask_b32_e32 v2, v3, v7, vcc                          // 000000001990: 00040F03
 	// HIP: r = x + (cond ? y : -y)
 	v_add_u32_e32 v2, v6, v2                                   // 000000001994: 68040506
